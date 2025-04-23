@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { motion } from "motion/react";
+import { assets } from '../assets/assets';
 
 const Navbar = () => {
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -19,11 +20,13 @@ const Navbar = () => {
    ];
 
    return (
-      <header className="sticky top-0 z-50 bg-[#0F172A] shadow-md">
+      <header className="sticky top-0 z-50 bg-[#0F172A]">
          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             {/* Logo */ }
-            <Link to="/" className="text-[#FACC15] text-2xl font-bold">
-               Profund
+            <Link to="/"
+               onClick={ () => scrollTo(0, 0) }
+               className="text-[#FACC15] text-2xl font-bold">
+               <img src={ assets.logo } alt="logo" className='w-38' />
             </Link>
 
             {/* Desktop Nav */ }
@@ -42,7 +45,8 @@ const Navbar = () => {
                   </NavLink>
                )) }
                <Link
-                  to="/get-started"
+                  to="/login"
+                  onClick={ () => scrollTo(0, 0) }
                   className="bg-[#FACC15] text-[#0F172A] font-semibold px-5 py-2 rounded-md hover:bg-yellow-400 transition"
                >
                   Get Started
@@ -64,7 +68,7 @@ const Navbar = () => {
          {/* Overlay */ }
          { isMobileMenuOpen && (
             <div
-               className="fixed inset-0 bg-gray-100 bg-opacity-40 z-30"
+               className="fixed inset-0 bg-transparent bg-opacity-40 z-30"
                onClick={ toggleMobileMenu }
             />
          ) }
@@ -83,7 +87,7 @@ const Navbar = () => {
                      <NavLink
                         key={ link.name }
                         to={ link.path }
-                        onClick={ () => setIsMobileMenuOpen(false) }
+                        onClick={ () => { setIsMobileMenuOpen(false); scrollTo(0, 0); } }
                         className={ ({ isActive }) =>
                            `block text-white hover:text-[#FACC15] text-lg font-medium transition ${isActive ? 'text-[#FACC15]' : ''
                            }`
@@ -93,8 +97,8 @@ const Navbar = () => {
                      </NavLink>
                   )) }
                   <Link
-                     to="/get-started"
-                     onClick={ () => setIsMobileMenuOpen(false) }
+                     to="/login"
+                     onClick={ () => { setIsMobileMenuOpen(false); scrollTo(0, 0); } }
                      className="block bg-[#FACC15] text-[#0F172A] text-center font-semibold py-2 rounded-md hover:bg-yellow-400 transition"
                   >
                      Get Started

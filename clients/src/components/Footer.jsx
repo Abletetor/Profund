@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
+import { FaTwitter, FaLinkedin, FaInstagram, FaFacebook } from 'react-icons/fa';
+import { assets } from '../assets/assets';
 
 const Footer = () => {
    return (
@@ -9,7 +10,7 @@ const Footer = () => {
 
             {/* Brand + About */ }
             <div>
-               <h3 className="text-2xl font-bold text-white mb-3">Profund</h3>
+               <img src={ assets.logo } alt="logo" className='w-38' />
                <p className="text-sm leading-relaxed">
                   Profund is your gateway to fund, launch, and support world-changing ideas.
                   Join a growing community of innovators and investors.
@@ -20,10 +21,10 @@ const Footer = () => {
             <div>
                <h4 className="text-lg font-semibold text-white mb-2">Quick Links</h4>
                <ul className="space-y-2 text-sm">
-                  <li><Link to="/about" className="hover:text-yellow-400">About</Link></li>
-                  <li><Link to="/contact" className="hover:text-yellow-400">Contact</Link></li>
-                  <li><Link to="/privacy" className="hover:text-yellow-400">Privacy Policy</Link></li>
-                  <li><Link to="/terms" className="hover:text-yellow-400">Terms & Conditions</Link></li>
+                  <li><Link to="/about" className="hover:text-yellow-400" onClick={ () => scrollTo(0, 0) }>About</Link></li>
+                  <li><Link to="/contact" className="hover:text-yellow-400" onClick={ () => scrollTo(0, 0) }>Contact</Link></li>
+                  <li><Link to="/privacy" className="hover:text-yellow-400" onClick={ () => scrollTo(0, 0) }>Privacy Policy</Link></li>
+                  <li><Link to="/terms" className="hover:text-yellow-400" onClick={ () => scrollTo(0, 0) }>Terms & Conditions</Link></li>
                </ul>
             </div>
 
@@ -34,6 +35,7 @@ const Footer = () => {
                   <a href="#" className="hover:text-yellow-400"><FaTwitter size={ 20 } /></a>
                   <a href="#" className="hover:text-yellow-400"><FaLinkedin size={ 20 } /></a>
                   <a href="#" className="hover:text-yellow-400"><FaInstagram size={ 20 } /></a>
+                  <a href="#" className="hover:text-yellow-400"><FaFacebook size={ 20 } /></a>
                </div>
             </div>
 
@@ -45,7 +47,7 @@ const Footer = () => {
                   <input
                      type="email"
                      placeholder="Enter your email"
-                     className="px-3 py-2 rounded-l-md text-sm w-full text-gray-800"
+                     className="px-3 py-2 rounded-l-md text-sm w-full text-white border border-white bg-[#1E293B] focus:outline-none"
                      required
                   />
                   <button

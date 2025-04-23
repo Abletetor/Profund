@@ -22,12 +22,14 @@ const FinalCTA = () => {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
                <Link
                   to="/start-project"
+                  onClick={ () => scrollTo(0, 0) }
                   className="bg-[#0F172A] text-white font-semibold py-3 px-6 rounded-md hover:bg-[#1E293B] transition"
                >
                   Start a Project
                </Link>
                <Link
                   to="/projects"
+                  onClick={ () => scrollTo(0, 0) }
                   className="border-2 border-[#0F172A] text-[#0F172A] font-semibold py-3 px-6 rounded-md hover:bg-[#0F172A] hover:text-white transition"
                >
                   Invest Now

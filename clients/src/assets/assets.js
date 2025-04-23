@@ -1,3 +1,4 @@
+import logo from './logo.png';
 import headerImg from './header-illustration.svg';
 import solarImg from './solar-water.png';
 import mobileImg from './mobile-health.png';
@@ -10,6 +11,7 @@ import blog2 from './e-learn.png';
 import blog3 from './success.jpeg';
 
 export const assets = {
+   logo,
    headerImg,
    blog1,
    blog2,
@@ -25,6 +27,11 @@ export const projects = [
       image: solarImg,
       category: 'Clean Energy',
       funded: 75,
+      goal: 10000,
+      raised: 7500,
+      daysLeft: 15,
+      overview: 'This project aims to provide clean, sustainable drinking water to remote communities using solar-powered pumps and filtration systems. The goal is to reduce waterborne diseases and improve health outcomes.',
+      bio: 'Kwame is a renewable energy advocate with 7+ years of experience designing sustainable solutions for rural Africa.'
    },
    {
       id: 2,
@@ -33,6 +40,11 @@ export const projects = [
       image: mobileImg,
       category: 'Health Tech',
       funded: 60,
+      goal: 15000,
+      raised: 9000,
+      daysLeft: 10,
+      overview: 'A mobile health solution that brings diagnostics to rural and underserved areas. The unit includes tools for checking vital signs, basic lab testing, and digital health record syncing.',
+      bio: 'Ama is a public health innovator passionate about mobile-first healthcare delivery in developing communities.'
    },
    {
       id: 3,
@@ -41,6 +53,11 @@ export const projects = [
       image: droneImg,
       category: 'Agriculture',
       funded: 92,
+      goal: 12000,
+      raised: 11040,
+      daysLeft: 5,
+      overview: 'Utilizing drones to monitor crops, identify pest infestations early, and optimize irrigation. This tech enables farmers to improve yields while reducing environmental impact.',
+      bio: 'Yaw is an agricultural engineer using drone tech to help farmers adopt smart and sustainable practices.'
    },
    {
       id: 4,
@@ -49,6 +66,11 @@ export const projects = [
       image: elearnImg,
       category: 'Education',
       funded: 48,
+      goal: 8000,
+      raised: 3840,
+      daysLeft: 20,
+      overview: 'Creating offline-friendly educational content and distributing solar-powered learning tablets to students in remote villages. The mission is to bridge the digital divide and empower the next generation.',
+      bio: 'Esi is an edtech champion creating tools that empower children in underserved areas to learn and thrive.'
    },
    {
       id: 5,
@@ -57,6 +79,11 @@ export const projects = [
       image: plasticImg,
       category: 'Sustainable Living',
       funded: 85,
+      goal: 20000,
+      raised: 17000,
+      daysLeft: 7,
+      overview: 'Transforming plastic waste into affordable housing. This innovative approach provides shelter for the underserved while tackling pollution through sustainable building practices.',
+      bio: 'Kojo is a civil engineer dedicated to building eco-friendly homes and reducing plastic waste in Africa.'
    },
    {
       id: 6,
@@ -65,6 +92,23 @@ export const projects = [
       image: smartImg,
       category: 'AgriTech',
       funded: 67,
+      goal: 10000,
+      raised: 6700,
+      daysLeft: 12,
+      overview: 'An IoT-powered irrigation system that monitors soil moisture and weather to deliver water precisely when and where it’s needed. Helps conserve water and boost productivity for small-scale farmers.',
+      bio: 'Naana is a tech-savvy agripreneur focused on using smart farming tools to transform agriculture in West Africa.'
+   }, {
+      id: 7,
+      title: 'Smart Plough Tech',
+      creator: 'Naana Abena',
+      image: smartImg,
+      category: 'AgriTech',
+      funded: 67,
+      goal: 10000,
+      raised: 6700,
+      daysLeft: 12,
+      overview: 'An IoT-powered irrigation system that monitors soil moisture and weather to deliver water precisely when and where it’s needed. Helps conserve water and boost productivity for small-scale farmers.',
+      bio: 'Naana is a tech-savvy agripreneur focused on using smart farming tools to transform agriculture in West Africa.'
    },
 ];
 

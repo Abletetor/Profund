@@ -22,13 +22,15 @@ const Header = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                <Link
-                  to="/get-started"
+                  to="/login"
+                  onClick={ () => scrollTo(0, 0) }
                   className="bg-[#FACC15] hover:bg-[#eab308] text-[#0F172A] font-semibold py-3 px-6 rounded-md transition"
                >
                   Get Started
                </Link>
                <Link
                   to="/projects"
+                  onClick={ () => scrollTo(0, 0) }
                   className="border border-white text-white hover:text-[#60A5FA] hover:border-[#60A5FA] font-semibold py-3 px-6 rounded-md transition"
                >
                   Explore Projects

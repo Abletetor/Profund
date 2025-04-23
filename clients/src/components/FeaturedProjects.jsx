@@ -1,8 +1,7 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useContext } from 'react';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { projects } from '../assets/assets';
-
+import { AppContext } from '../context/AppContext';
 
 const fadeInUp = {
    hidden: { opacity: 0, y: 40 },
@@ -14,6 +13,7 @@ const fadeInUp = {
 };
 
 const FeaturedProjects = () => {
+   const { projects, currency } = useContext(AppContext);
    return (
       <section className="bg-white py-20 px-6 md:px-12 lg:px-24">
          <div className="text-center mb-12">
@@ -22,7 +22,7 @@ const FeaturedProjects = () => {
          </div>
 
          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            { projects.map((project, i) => (
+            { projects.slice(0, 6).map((project, i) => (
                <motion.div
                   key={ project.id }
                   variants={ fadeInUp }
@@ -50,10 +50,19 @@ const FeaturedProjects = () => {
                            style={ { width: `${project.funded}%` } }
                         />
                      </div>
-                     <p className="text-sm text-gray-600 mb-4">{ project.funded }% funded</p>
+                     <div className="text-sm text-gray-600 mb-2 flex justify-between">
+                        <span>{ project.funded }% funded</span>
+                        <span>{ project.daysLeft } days left</span>
+                     </div>
+
+                     {/* Funding Details */ }
+                     <div className="text-xs text-gray-500 mb-4">
+                        Raised: { currency } { project.raised.toLocaleString() } of { currency } { project.goal.toLocaleString() }
+                     </div>
 
                      <Link
                         to={ `/projects/${project.id}` }
+                        onClick={ () => scrollTo(0, 0) }
                         className="inline-block text-sm font-medium text-white bg-[#0F172A] px-4 py-2 rounded hover:bg-[#1e293b] transition"
                      >
                         View Project
@@ -67,6 +76,7 @@ const FeaturedProjects = () => {
          <div className="text-center mt-14">
             <Link
                to="/projects"
+               onClick={ () => scrollTo(0, 0) }
                className="inline-block text-[#0F172A] font-semibold border border-[#0F172A] px-6 py-3 rounded hover:bg-[#0F172A] hover:text-white transition"
             >
                View All Projects

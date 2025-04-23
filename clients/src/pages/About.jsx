@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import OurTeam from '../components/OurTeam';
+import { Link } from 'react-router-dom';
 
 const About = () => {
    return (
@@ -9,9 +10,10 @@ const About = () => {
 
             {/* Hero Title */ }
             <motion.div
-               initial={ { opacity: 0, y: 30 } }
-               whileInView={ { opacity: 1, y: 0 } }
-               transition={ { duration: 0.5 } }
+               initial={ { opacity: 0, y: 40 } }
+               animate={ { opacity: 1, y: 0 } }
+               exit={ { opacity: 0, y: -40 } }
+               transition={ { duration: 0.6 } }
                className="text-center"
             >
                <h1 className="text-4xl font-bold text-[#0F172A] mb-4">About Profund</h1>
@@ -87,18 +89,20 @@ const About = () => {
                   Profund is your platform for impact.
                </p>
                <div className="flex justify-center gap-4">
-                  <a
-                     href="/signup"
+                  <Link
+                     to="/login"
+                     onClick={ () => scrollTo(0, 0) }
                      className="bg-[#FACC15] text-[#0F172A] font-semibold px-6 py-3 rounded hover:bg-yellow-400 transition"
                   >
                      Get Started
-                  </a>
-                  <a
-                     href="/projects"
+                  </Link>
+                  <Link
+                     to="/projects"
+                     onClick={ () => scrollTo(0, 0) }
                      className="border border-[#0F172A] text-[#0F172A] font-semibold px-6 py-3 rounded hover:bg-[#0F172A] hover:text-white transition"
                   >
                      Explore Projects
-                  </a>
+                  </Link>
                </div>
             </motion.div>
 
