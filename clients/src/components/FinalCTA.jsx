@@ -21,7 +21,7 @@ const FinalCTA = () => {
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
                <Link
-                  to="/start-project"
+                  to="/creator/dashboard"
                   onClick={ () => scrollTo(0, 0) }
                   className="bg-[#0F172A] text-white font-semibold py-3 px-6 rounded-md hover:bg-[#1E293B] transition"
                >

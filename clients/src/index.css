@@ -12,3 +12,7 @@ h2,
 h3 {
    font-family: "Poppins", sans-serif;
 }
+
+.input {
+   @apply w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FACC15];
+}
