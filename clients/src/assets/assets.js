@@ -9,6 +9,15 @@ import smartImg from './smart_irrigation.jpeg';
 import blog1 from './startup_teamwork.jpeg';
 import blog2 from './e-learn.png';
 import blog3 from './success.jpeg';
+import team1 from './comm.jpeg';
+import team2 from './relation.jpeg';
+import team3 from './ceo.jpeg';
+import team4 from './developer.jpeg';
+import team5 from './designer.jpeg';
+import team6 from './marketing.jpeg';
+import testimony1 from './test1.jpeg';
+import testimony2 from './test2.jpeg';
+import testimony3 from './test3.jpeg';
 
 export const assets = {
    logo,
@@ -112,12 +121,12 @@ export const projects = [
    },
 ];
 
-//Team members
+// Team members
 export const teamMembers = [
    {
-      name: 'Ama Owusu',
+      name: 'Issac Gavor',
       role: 'Founder & CEO',
-      img: 'https://randomuser.me/api/portraits/women/65.jpg',
+      img: team3,
       socials: {
          twitter: '#',
          linkedin: '#',
@@ -125,9 +134,9 @@ export const teamMembers = [
       },
    },
    {
-      name: 'Kwame Mensah',
+      name: 'Etornam Abletor',
       role: 'Lead Developer',
-      img: 'https://randomuser.me/api/portraits/men/32.jpg',
+      img: team4,
       socials: {
          twitter: '#',
          linkedin: '#',
@@ -137,7 +146,7 @@ export const teamMembers = [
    {
       name: 'Nana Adjei',
       role: 'Product Designer',
-      img: 'https://randomuser.me/api/portraits/men/45.jpg',
+      img: team5,
       socials: {
          twitter: '#',
          linkedin: '#',
@@ -147,7 +156,7 @@ export const teamMembers = [
    {
       name: 'Efua Asare',
       role: 'Community Manager',
-      img: 'https://randomuser.me/api/portraits/women/52.jpg',
+      img: team1,
       socials: {
          twitter: '#',
          linkedin: '#',
@@ -157,7 +166,7 @@ export const teamMembers = [
    {
       name: 'Yaw Antwi',
       role: 'Marketing Strategist',
-      img: 'https://randomuser.me/api/portraits/men/76.jpg',
+      img: team6,
       socials: {
          twitter: '#',
          linkedin: '#',
@@ -167,12 +176,34 @@ export const teamMembers = [
    {
       name: 'Akosua Dapaah',
       role: 'Investor Relations',
-      img: 'https://randomuser.me/api/portraits/women/33.jpg',
+      img: team2,
       socials: {
          twitter: '#',
          linkedin: '#',
          github: '#',
       },
+   },
+];
+
+// Testimonials
+export const testimonials = [
+   {
+      name: 'Kwame Boateng',
+      role: 'Creator',
+      quote: '“Profund gave my idea a life of its own. I got fully funded in just two weeks!”',
+      avatar: testimony1,
+   },
+   {
+      name: 'Amina Owusu',
+      role: 'Investor',
+      quote: '“I love seeing my investments help real people launch real projects. The transparency is top-notch.”',
+      avatar: testimony2,
+   },
+   {
+      name: 'Benjamin Kumi',
+      role: 'Creator',
+      quote: '“Easy to use and highly effective. I connected with investors who believed in my mission.”',
+      avatar: testimony3,
    },
 ];
 

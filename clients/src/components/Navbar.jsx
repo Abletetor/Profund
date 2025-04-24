@@ -26,7 +26,7 @@ const Navbar = () => {
             <Link to="/"
                onClick={ () => scrollTo(0, 0) }
                className="text-[#FACC15] text-2xl font-bold">
-               <img src={ assets.logo } alt="logo" className='w-38' />
+               <img src={ assets.logo } alt="logo" className='w-30 sm:w-24' />
             </Link>
 
             {/* Desktop Nav */ }
@@ -80,7 +80,7 @@ const Navbar = () => {
                animate={ { x: 0 } }
                exit={ { x: '100%' } }
                transition={ { duration: 0.3 } }
-               className="fixed top-0 right-0 w-2/3 h-full bg-[#1E293B] p-6 z-40 md:hidden shadow-lg"
+               className="fixed top-0 right-0 w-2/3 h-full bg-[#0F172A] p-6 z-40 md:hidden shadow-lg"
             >
                <ul className="flex flex-col gap-6 mt-16">
                   { navLinks.map((link) => (

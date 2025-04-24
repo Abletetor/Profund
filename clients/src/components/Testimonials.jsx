@@ -1,26 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { testimonials } from '../assets/assets';
 
-const testimonials = [
-   {
-      name: 'Amina Owusu',
-      role: 'Creator',
-      quote: '“Profund gave my idea a life of its own. I got fully funded in just two weeks!”',
-      avatar: 'https://i.pravatar.cc/100?img=32',
-   },
-   {
-      name: 'Kwame Boateng',
-      role: 'Investor',
-      quote: '“I love seeing my investments help real people launch real projects. The transparency is top-notch.”',
-      avatar: 'https://i.pravatar.cc/100?img=45',
-   },
-   {
-      name: 'Esi Kumi',
-      role: 'Creator',
-      quote: '“Easy to use and highly effective. I connected with investors who believed in my mission.”',
-      avatar: 'https://i.pravatar.cc/100?img=12',
-   },
-];
 
 const fadeIn = {
    hidden: { opacity: 0, y: 20 },
