@@ -16,3 +16,12 @@ h3 {
 .input {
    @apply w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#FACC15];
 }
+
+.scrollbar-hidden::-webkit-scrollbar {
+   display: none;
+}
+
+.scrollbar-hidden {
+   -ms-overflow-style: none;
+   scrollbar-width: none;
+}

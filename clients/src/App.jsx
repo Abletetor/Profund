@@ -11,6 +11,7 @@ import ProjectDetail from './pages/ProjectDetail';
 import Investment from './pages/Investment';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import { ToastContainer } from 'react-toastify';
 
 // Creator Dashboard
 import CreatorDashboard from './Dashboard/Creator/CreatorDashboard';
@@ -23,6 +24,7 @@ import CreatorProfile from './Dashboard/Creator/CreatorProfile';
 const App = () => {
    return (
       <div>
+         <ToastContainer />
          <Navbar />
          <Routes>
             <Route path='/' element={ <Home /> } />

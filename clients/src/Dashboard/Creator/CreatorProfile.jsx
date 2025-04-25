@@ -31,7 +31,7 @@ const CreatorProfile = () => {
          initial={ { opacity: 0, y: 40 } }
          animate={ { opacity: 1, y: 0 } }
          transition={ { duration: 0.6 } }
-         className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10"
+         className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10 mb-20"
       >
          <h2 className="text-2xl font-bold mb-6 text-[#0F172A]">Your Profile</h2>
 

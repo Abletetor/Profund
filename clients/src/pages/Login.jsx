@@ -1,12 +1,53 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const Login = () => {
-   const [role, setRole] = useState('investor');
    const [showPassword, setShowPassword] = useState(false);
+   const [role, setRole] = useState('investor');
+   const [email, setEmail] = useState('');
+   const [password, setPassword] = useState('');
+   const { setToken, setUserData, backendUrl } = useContext(AppContext);
+   const navigate = useNavigate();
+
+
+   // Form handler
+   const submitHandler = async (e) => {
+      e.preventDefault();
+      if (!email || !password) {
+         toast.warn("Please fill all fields");
+         return;
+      }
+
+      try {
+         const { data } = await axios.post(`${backendUrl}/api/user/login`, { email, password, role });
+
+         if (data.success) {
+            localStorage.setItem("token", data.token);
+            setToken(data.token);
+            setUserData(data.userData);
+            if (data.userData?.role === 'creator') {
+               navigate('/creator/dashboard');
+            } else if (data.userData?.role === 'investor') {
+               navigate('/investor/dashboard');
+            } else {
+               navigate('/');
+            }
+
+         } else {
+            toast.error(data.message);
+         }
+      } catch (error) {
+         console.error("Error in Login: ", error);
+         // toast.error("Something went wrong. Please try again later.");
+      }
+   };
+
 
    return (
       <motion.div
@@ -51,13 +92,15 @@ const Login = () => {
                </div>
 
                {/* Login Form */ }
-               <form className="space-y-4">
+               <form className="space-y-4" onSubmit={ submitHandler }>
                   <div className="relative">
                      <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
                      <input
                         type="email"
                         placeholder="Email Address"
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0F172A]"
+                        onChange={ (e) => setEmail(e.target.value) }
+                        value={ email }
                      />
                   </div>
 
@@ -67,6 +110,8 @@ const Login = () => {
                         type={ showPassword ? 'text' : 'password' }
                         placeholder="Password"
                         className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0F172A]"
+                        onChange={ (e) => setPassword(e.target.value) }
+                        value={ password }
                      />
                      <div
                         onClick={ () => setShowPassword(!showPassword) }

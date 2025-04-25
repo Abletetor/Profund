@@ -1,12 +1,58 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FaEnvelope, FaLock, FaUser, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const Register = () => {
    const [showPassword, setShowPassword] = useState(false);
    const [role, setRole] = useState('investor');
+   const [email, setEmail] = useState('');
+   const [password, setPassword] = useState('');
+   const [confirmPassword, setConfirmPassword] = useState('');
+   const [fullName, setFullName] = useState('');
+   const { token, setToken, setUserData, backendUrl } = useContext(AppContext);
+   const navigate = useNavigate();
+
+
+   // Form handler
+   const submitHandler = async (e) => {
+      e.preventDefault();
+
+      if (!fullName || !email || !password || !confirmPassword) {
+         toast.warn("Please fill all fields");
+         return;
+      }
+      if (password !== confirmPassword) {
+         toast.warn("Passwords do not match");
+         return;
+      }
+
+      try {
+         const { data } = await axios.post(`${backendUrl}/api/user/register`, { fullName, email, password, role });
+
+         if (data.success) {
+            localStorage.setItem("token", data.token);
+            setToken(data.token);
+            setUserData(data.userData);
+         } else {
+            toast.error(data.message);
+         }
+
+      } catch (error) {
+         console.error("Error in Registration: ", error);
+         toast.error("Something went wrong. Please try again later.");
+      }
+   };
+
+   useEffect(() => {
+      if (token) {
+         navigate('/login');
+      }
+   }, [token, navigate]);
 
    return (
       <motion.div
@@ -44,13 +90,15 @@ const Register = () => {
                </button>
             </div>
 
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={ submitHandler }>
                <div className="relative">
                   <FaUser className="absolute top-3 left-3 text-gray-400" />
                   <input
                      type="text"
                      placeholder="Full Name"
                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#0F172A]"
+                     onChange={ (e) => setFullName(e.target.value) }
+                     value={ fullName }
                   />
                </div>
 
@@ -60,6 +108,8 @@ const Register = () => {
                      type="email"
                      placeholder="Email Address"
                      className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#0F172A]"
+                     onChange={ (e) => setEmail(e.target.value) }
+                     value={ email }
                   />
                </div>
 
@@ -69,6 +119,8 @@ const Register = () => {
                      type={ showPassword ? 'text' : 'password' }
                      placeholder="Password"
                      className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#0F172A]"
+                     onChange={ (e) => setPassword(e.target.value) }
+                     value={ password }
                   />
                   <span
                      className="absolute right-3 top-3 cursor-pointer text-gray-400"
@@ -84,6 +136,8 @@ const Register = () => {
                      type={ showPassword ? 'text' : 'password' }
                      placeholder="Confirm Password"
                      className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#0F172A]"
+                     onChange={ (e) => setConfirmPassword(e.target.value) }
+                     value={ confirmPassword }
                   />
                </div>
 
