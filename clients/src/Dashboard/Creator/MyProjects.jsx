@@ -65,15 +65,15 @@ const MyProjects = () => {
 
                         <div className='md:flex justify-between mb-2 hidden'>
                            <div className='flex gap-1'>
-                              <span className="text-sm text-blue-600">Goal: </span>
-                              <span className="text-sm text-gray-600">
+                              <span className="text-xs text-blue-600">Goal: </span>
+                              <span className="text-xs text-gray-600">
                                  { project.goal ? `${currency} ${project.goal.toLocaleString()}` : 'No goal set' }
                               </span>
                            </div>
 
                            <div className='flex gap-1'>
-                              <span className="text-sm text-blue-600">Min Invest: </span>
-                              <span className="text-sm text-gray-600">
+                              <span className="text-xs text-blue-600">Min Invest: </span>
+                              <span className="text-xs text-gray-600">
                                  { project.minInvestment ? `${currency} ${project.minInvestment.toLocaleString()}` : 'No min investment' }
                               </span>
                            </div>
