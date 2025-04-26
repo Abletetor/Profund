@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import { FaRegSmileBeam } from 'react-icons/fa';
+import { AppContext } from '../../context/AppContext';
 
 const CreatorWelcome = () => {
+   const { projectData } = useContext(AppContext);
+
    return (
       <motion.div
          initial={ { opacity: 0, y: 30 } }
@@ -12,11 +15,12 @@ const CreatorWelcome = () => {
       >
          <div className="flex items-center mb-4">
             <FaRegSmileBeam className="text-yellow-400 text-3xl mr-3" />
-            <h2 className="text-2xl font-bold text-[#0F172A]">Welcome back, Kwame!</h2>
+            <h2 className="text-2xl font-bold text-[#0F172A]">
+               Welcome { projectData?.creator?.fullName || 'Creator' }
+            </h2>
          </div>
          <p className="text-gray-700 leading-relaxed text-[16px] md:text-[17px]">
-            We’re thrilled to see you back on Profund. Your contributions are powering real change, and every project you launch brings us one step closer to a better tomorrow. Use this dashboard to manage your campaigns, track funding progress, and keep your supporters
-            updated. Let’s keep building a brighter future together!
+            Welcome! This is your Profund dashboard — the place to create projects, track your funding, and connect with supporters. Every project you launch brings real change. Let’s get started!
          </p>
       </motion.div>
    );

@@ -13,11 +13,11 @@ const cardVariants = {
 };
 
 const QuickStats = () => {
-   const { projects, currency } = useContext(AppContext);
+   const { dashProject, currency } = useContext(AppContext);
 
-   const totalProjects = projects.length;
-   const totalRaised = projects.reduce((sum, proj) => sum + proj.raised, 0);
-   const activeCampaigns = projects.filter((p) => p.daysLeft > 0).length;
+   const totalProjects = dashProject.length;
+   const totalRaised = dashProject.reduce((sum, proj) => sum + proj.currentFunding, 0);
+   const activeCampaigns = dashProject.filter((p) => p.daysLeft > 0).length;
 
    const stats = [
       {
