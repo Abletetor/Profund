@@ -45,7 +45,7 @@ const registerUser = async (req, res) => {
       const user = await newUser.save();
 
       // Generate token
-      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '10h' });
+      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
       res.status(201).json({
          success: true,
@@ -87,7 +87,7 @@ const loginUser = async (req, res) => {
       }
 
       // Generate token
-      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '10h' });
+      const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
       // Return user data with token
       res.status(200).json({

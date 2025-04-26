@@ -10,14 +10,20 @@ const app = express();
 const port = process.env.PORT || 5000;
 connectDB();
 
-//middleware setup
-app.use(cors());
+// CORS setup for testing - Allow any origin and custom headers
+app.use(cors({
+   origin: '*',
+   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+   allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// Body parser
 app.use(express.json());
 
 // API EndPoints
 app.use('/api/user', userRouter);
 
-
+// Server start
 app.listen(port, () => {
    console.log(`Server Listening on ${port}`);
 });
