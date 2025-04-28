@@ -89,8 +89,36 @@ const myProjects = async (req, res) => {
    }
 };
 
+// Creator Dashboard
+const creatorDashboard = async (req, res) => {
+   try {
+      const userId = req.user._id;
+
+      // Fetch all Projects
+      const projects = await projectModel.find({ creator: userId });
+
+      const totalProjects = projects.length;
+      const totalRaised = projects.reduce((sum, project) => sum + (project.currentFunding || 0), 0);
+      const activeCampaigns = projects.filter(project => {
+         const now = new Date();
+         return project.deadline && new Date(project.deadline) > now;
+      }).length;
+
+      const dashStats = {
+         totalProjects,
+         totalRaised,
+         activeCampaigns
+      };
+
+      return res.status(200).json({ success: true, dashStats });
+   } catch (error) {
+      console.error("Creator Dashboard Error:", error);
+      return res.status(500).json({ success: false, message: "Internal server error." });
+   }
+};
 
 
 export {
-   addProject, myProjects
+   addProject, myProjects,
+   creatorDashboard
 };

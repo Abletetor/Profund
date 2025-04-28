@@ -64,7 +64,6 @@ const registerUser = async (req, res) => {
    }
 };
 
-
 // **Login User**
 const loginUser = async (req, res) => {
    try {
@@ -107,8 +106,83 @@ const loginUser = async (req, res) => {
    }
 };
 
+// **Get User Profile**
+const getUserProfile = async (req, res) => {
+   try {
+      const userId = req.user._id;
+
+      // Fetch the user profile by ID 
+      const userData = await userModel.findById(userId).select('-password');
+
+      if (!userData) {
+         return res.status(404).json({ success: false, message: 'User not found' });
+      }
+
+      // Return the user profile data
+      return res.status(200).json({ success: true, userData });
+   } catch (error) {
+      console.error("Error in Getting User Profile: ", error);
+      return res.status(500).json({ success: false, message: 'Something went wrong' });
+   }
+};
+
+// **Update user profile controller**
+const updateProfile = async (req, res) => {
+   try {
+      // Check for validation errors using validator package 
+      const errors = [];
+
+      if (!req.body.name || req.body.name.trim().length === 0) {
+         errors.push('Name is required');
+      }
+      if (!req.body.email || !/\S+@\S+\.\S+/.test(req.body.email)) {
+         errors.push('A valid email is required');
+      }
+      if (errors.length) {
+         return res.status(400).json({ errors });
+      }
+
+      // Destructure the request body
+      const { name, email, location, bio, twitter, linkedin } = req.body;
+      const userId = req.user._id;
+      // Find the user based on the user ID
+      const user = await userModel.findById(userId);
+
+      if (!user) {
+         return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Update the user's profile details
+      if (name) user.fullName = name;
+      if (email) user.email = email;
+      if (location) user.location = location;
+      if (bio) user.bio = bio;
+      if (twitter) user.twitter = twitter;
+      if (linkedin) user.linkedin = linkedin;
+
+      // If a new profile image is uploaded (handled by multer middleware)
+      if (req.file) {
+         user.imageUrl = req.file.path;
+      }
+
+      // Save the updated user data
+      await user.save();
+
+      return res.status(200).json({
+         success: true,
+         message: 'Profile updated successfully',
+         user: { ...user.toObject(), imageUrl: user.imageUrl },
+      });
+   } catch (error) {
+      console.error("Error in UpdateProfile: ", error);
+      return res.status(500).json({ success: false, message: 'Something went wrong' });
+   }
+};
+
 
 export {
    registerUser,
    loginUser,
+   getUserProfile,
+   updateProfile
 };
