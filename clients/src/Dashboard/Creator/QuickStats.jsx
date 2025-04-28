@@ -1,40 +1,60 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { motion } from 'framer-motion';
 import { FaProjectDiagram, FaMoneyBillWave, FaBolt } from 'react-icons/fa';
+import { cardVariants, formatCurrencyAmount } from '../../helper/helper';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import ShimmerLoader from '../../components/ShimmerLoder';
 
-const cardVariants = {
-   hidden: { opacity: 0, y: 20 },
-   visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.2 },
-   }),
-};
 
 const QuickStats = () => {
-   const { dashProject, currency } = useContext(AppContext);
+   const navigate = useNavigate();
+   const { getCreatorDashboardStats, dashStats, token, currency } = useContext(AppContext);
+   const [loading, setLoading] = useState(true);
 
-   const totalProjects = dashProject.length;
-   const totalRaised = dashProject.reduce((sum, proj) => sum + proj.currentFunding, 0);
-   const activeCampaigns = dashProject.filter((p) => p.daysLeft > 0).length;
+   useEffect(() => {
+      if (!token) {
+         toast.warn("Please log in to access your dashboard.");
+         navigate('/login', { replace: true });
+         window.scrollTo(0, 0);
+         return;
+      }
+      setLoading(true);
+      getCreatorDashboardStats().finally(() => setLoading(false));
+   }, [token, navigate]);
+
+
+   // Loading state
+   if (loading || !dashStats) {
+      return (
+         <div className="grid md:grid-cols-3 gap-6 mt-8">
+            { Array.from({ length: 3 }).map((_, idx) => (
+               <div key={ idx } className="p-5 rounded-lg shadow-md space-y-4 bg-white">
+                  <ShimmerLoader height="h-8" width="w-2/3" />
+                  <ShimmerLoader height="h-6" width="w-1/3" />
+               </div>
+            )) }
+         </div>
+      );
+   }
 
    const stats = [
       {
          label: 'Total Projects',
-         value: totalProjects,
+         value: dashStats.totalProjects,
          icon: <FaProjectDiagram className="text-2xl text-blue-600" />,
          color: 'bg-blue-50',
       },
       {
          label: 'Total Raised',
-         value: `${currency} ${totalRaised.toLocaleString()}`,
+         value: formatCurrencyAmount(dashStats.totalRaised, currency),
          icon: <FaMoneyBillWave className="text-2xl text-green-600" />,
          color: 'bg-green-50',
       },
       {
          label: 'Active Campaigns',
-         value: activeCampaigns,
+         value: dashStats.activeCampaigns,
          icon: <FaBolt className="text-2xl text-yellow-500" />,
          color: 'bg-yellow-50',
       },

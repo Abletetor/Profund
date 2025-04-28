@@ -1,19 +1,35 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaEdit, FaEye } from 'react-icons/fa';
 import { AppContext } from '../../context/AppContext';
 import { Link } from 'react-router-dom';
-import { calculateDaysLeft, fadeIn } from '../../helper/helper';
+import { calculateDaysLeft, fadeIn, formatCurrencyAmount } from '../../helper/helper';
+import ShimmerLoader from '../../components/ShimmerLoder';
 
 
 const MyProjects = () => {
    const { dashProject, token, getDashProject, currency } = useContext(AppContext);
+   const [loading, setLoading] = useState(true);
 
    useEffect(() => {
       if (token) {
-         getDashProject();
+         getDashProject().finally(() => setLoading(false));
       }
    }, [token]);
+
+   // Loading state
+   if (loading || !dashProject) {
+      return (
+         <div className="grid md:grid-cols-3 gap-6 mt-8">
+            { Array.from({ length: 3 }).map((_, idx) => (
+               <div key={ idx } className="p-5 rounded-lg shadow-md space-y-4 bg-white">
+                  <ShimmerLoader height="h-8" width="w-2/3" />
+                  <ShimmerLoader height="h-6" width="w-1/3" />
+               </div>
+            )) }
+         </div>
+      );
+   }
 
    return (
       <section className="p-6 mb-20">
@@ -56,25 +72,25 @@ const MyProjects = () => {
                         <div className='flex justify-between'>
 
                            <div className="text-sm text-gray-600 mb-3">
-                              { percentageFunded }% funded ({ currency } { amountRaised.toLocaleString() })
+                              { percentageFunded }% funded ({ formatCurrencyAmount(amountRaised, currency) })
                            </div>
                            <span className="text-xs text-gray-500 mb-1">
                               { daysLeft } days left
                            </span>
                         </div>
 
-                        <div className='md:flex justify-between mb-2 hidden'>
+                        <div className='md:flex justify-between mb-2'>
                            <div className='flex gap-1'>
                               <span className="text-xs text-blue-600">Goal: </span>
                               <span className="text-xs text-gray-600">
-                                 { project.goal ? `${currency} ${project.goal.toLocaleString()}` : 'No goal set' }
+                                 { project.goal ? formatCurrencyAmount(project.goal, currency) : 'No goal set' }
                               </span>
                            </div>
 
                            <div className='flex gap-1'>
                               <span className="text-xs text-blue-600">Min Invest: </span>
                               <span className="text-xs text-gray-600">
-                                 { project.minInvestment ? `${currency} ${project.minInvestment.toLocaleString()}` : 'No min investment' }
+                                 { project.minInvestment ? formatCurrencyAmount(project.minInvestment, currency) : 'No min investment' }
                               </span>
                            </div>
                         </div>

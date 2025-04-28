@@ -4,7 +4,10 @@ import { FaRegSmileBeam } from 'react-icons/fa';
 import { AppContext } from '../../context/AppContext';
 
 const CreatorWelcome = () => {
-   const { projectData } = useContext(AppContext);
+   const { projects, userData } = useContext(AppContext);
+
+   const isNewUser = projects.length === 0;
+
 
    return (
       <motion.div
@@ -16,12 +19,19 @@ const CreatorWelcome = () => {
          <div className="flex items-center mb-4">
             <FaRegSmileBeam className="text-yellow-400 text-3xl mr-3" />
             <h2 className="text-2xl font-bold text-[#0F172A]">
-               Welcome { projectData?.creator?.fullName || 'Creator' }
+               Welcome { <span className="text-[#FACC15]">{ userData.fullName }</span> || 'Creator' }
             </h2>
          </div>
-         <p className="text-gray-700 leading-relaxed text-[16px] md:text-[17px]">
-            Welcome! This is your Profund dashboard — the place to create projects, track your funding, and connect with supporters. Every project you launch brings real change. Let’s get started!
-         </p>
+
+         { isNewUser ? (
+            <p className="text-gray-700 leading-relaxed text-[16px] md:text-[17px]">
+               It looks like you're just getting started! Use this dashboard to launch your first project, set funding goals, and share your ideas with the world. We're excited to have you on Profund — let's build something amazing together!
+            </p>
+         ) : (
+            <p className="text-gray-700 leading-relaxed text-[16px] md:text-[17px]">
+               Welcome back! Manage your projects, track your funding progress, and engage your supporters — all from your dashboard. Keep creating, keep inspiring, and let’s continue making a difference together!
+            </p>
+         ) }
       </motion.div>
    );
 };

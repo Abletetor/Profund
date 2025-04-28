@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
-import { FaUser, FaEnvelope, FaMapMarkerAlt, FaSave, FaUpload } from 'react-icons/fa';
+import React, { useState, useEffect, useContext } from 'react';
+import { FaUser, FaEnvelope, FaMapMarkerAlt, FaSave, FaEdit, FaUpload } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import axios from 'axios';
+import { AppContext } from '../../context/AppContext';
+import { toast } from 'react-toastify';
 
 const CreatorProfile = () => {
+   const { backendUrl, token, userData } = useContext(AppContext);
    const [profile, setProfile] = useState({
-      name: 'Kwame Mensah',
-      email: 'kwame@example.com',
-      location: 'Accra, Ghana',
-      bio: 'Renewable energy advocate with 7+ years designing sustainable solutions.',
+      name: '',
+      email: '',
+      location: '',
+      bio: '',
       twitter: '',
       linkedin: '',
+      imageUrl: '',
    });
 
    const [image, setImage] = useState(null);
+   const [isEditing, setIsEditing] = useState(false);
+
+   useEffect(() => {
+      setProfile(userData);
+   }, [userData]);
 
    const handleChange = (e) => {
       const { name, value } = e.target;
@@ -23,6 +33,44 @@ const CreatorProfile = () => {
       const file = e.target.files[0];
       if (file) {
          setImage(URL.createObjectURL(file));
+      }
+   };
+
+   const toggleEditMode = () => {
+      setIsEditing(prev => !prev);
+   };
+
+   const handleSaveProfile = async () => {
+      try {
+         const formData = new FormData();
+         formData.append('name', profile.fullName);
+         formData.append('email', profile.email);
+         formData.append('location', profile.location);
+         formData.append('bio', profile.bio);
+         formData.append('twitter', profile.twitter);
+         formData.append('linkedin', profile.linkedin);
+         if (image) {
+            formData.append('image', image);
+         }
+
+         // Send a request to update the profile
+         const { data } = await axios.post(`${backendUrl}/api/user/update-profile`, formData, {
+            headers: { Authorization: `Bearer ${token}` }
+         });
+
+         if (data.success) {
+            setProfile(prev => ({
+               ...prev,
+               imageUrl: data.imageUrl || prev.imageUrl,
+            }));
+            toast.success(data.message);
+            setIsEditing(false);
+         } else {
+            toast.error(data.message);
+         }
+      } catch (error) {
+         toast.error(error.response?.data?.message || "Something went wrong");
+         console.error(error);
       }
    };
 
@@ -43,8 +91,9 @@ const CreatorProfile = () => {
                   <input
                      type="text"
                      name="name"
-                     value={ profile.name }
+                     value={ profile.fullName }
                      onChange={ handleChange }
+                     disabled={ !isEditing }
                      className="bg-transparent w-full py-2 outline-none"
                   />
                </div>
@@ -59,6 +108,7 @@ const CreatorProfile = () => {
                      name="email"
                      value={ profile.email }
                      onChange={ handleChange }
+                     disabled={ !isEditing }
                      className="bg-transparent w-full py-2 outline-none"
                   />
                </div>
@@ -73,6 +123,7 @@ const CreatorProfile = () => {
                      name="location"
                      value={ profile.location }
                      onChange={ handleChange }
+                     disabled={ !isEditing }
                      className="bg-transparent w-full py-2 outline-none"
                   />
                </div>
@@ -86,14 +137,21 @@ const CreatorProfile = () => {
                      type="file"
                      accept="image/*"
                      onChange={ handleImageChange }
-                     className=" hidden"
+                     disabled={ !isEditing }
+                     className="hidden"
                   />
-
                </label>
                { image && (
                   <img
                      src={ image }
                      alt="Profile Preview"
+                     className="mt-3 h-24 w-24 object-cover rounded-full"
+                  />
+               ) }
+               { profile.imageUrl && !image && !isEditing && (
+                  <img
+                     src={ profile.imageUrl }
+                     alt="Profile"
                      className="mt-3 h-24 w-24 object-cover rounded-full"
                   />
                ) }
@@ -105,6 +163,7 @@ const CreatorProfile = () => {
                   name="bio"
                   value={ profile.bio }
                   onChange={ handleChange }
+                  disabled={ !isEditing }
                   rows={ 4 }
                   className="w-full bg-gray-100 rounded px-3 py-2 outline-none"
                />
@@ -117,6 +176,7 @@ const CreatorProfile = () => {
                   name="twitter"
                   value={ profile.twitter }
                   onChange={ handleChange }
+                  disabled={ !isEditing }
                   className="w-full bg-gray-100 rounded px-3 py-2 outline-none"
                />
             </div>
@@ -128,16 +188,18 @@ const CreatorProfile = () => {
                   name="linkedin"
                   value={ profile.linkedin }
                   onChange={ handleChange }
+                  disabled={ !isEditing }
                   className="w-full bg-gray-100 rounded px-3 py-2 outline-none"
                />
             </div>
          </div>
 
          <button
-            className="mt-6 flex items-center gap-2 bg-[#FACC15] hover:bg-yellow-400 transition text-[#0F172A] font-medium py-2 px-5 rounded"
+            onClick={ isEditing ? handleSaveProfile : toggleEditMode }
+            className="mt-6 flex items-center gap-2 bg-[#FACC15] hover:bg-yellow-400 transition text-[#0F172A] font-medium py-2 px-5 rounded cursor-pointer"
          >
-            <FaSave />
-            Save Profile
+            { isEditing ? <FaSave /> : <FaEdit /> }
+            { isEditing ? 'Save Profile' : 'Edit Profile' }
          </button>
       </motion.section>
    );
