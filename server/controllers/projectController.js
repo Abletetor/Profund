@@ -117,8 +117,104 @@ const creatorDashboard = async (req, res) => {
    }
 };
 
+// **Get All Project for Frontend**
+const getAllProjects = async (req, res) => {
+   try {
+      const projects = await projectModel
+         .find()
+         .populate("creator", "fullName")
+         .sort({ createdAt: -1 });
 
+      if (!projects || projects.length === 0) {
+         return res.status(404).json({ success: false, message: "No projects found." });
+      }
+
+      // Enhance each project with computed values
+      const enhancedProjects = projects.map(project => {
+         const createdAt = new Date(project.createdAt);
+         const duration = project.duration;
+         const endDate = new Date(createdAt);
+         endDate.setDate(createdAt.getDate() + duration);
+
+         const now = new Date();
+         const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)));
+
+         const amountRaised = project.currentFunding || 0;
+         const percentageFunded = project.goal
+            ? Math.min((amountRaised / project.goal) * 100, 100).toFixed(0)
+            : "0";
+
+         return {
+            ...project.toObject(),
+            daysLeft,
+            amountRaised,
+            percentageFunded
+         };
+      });
+
+      return res.status(200).json({
+         success: true,
+         message: "Projects fetched successfully",
+         projects: enhancedProjects
+      });
+
+   } catch (error) {
+      console.error("Get All Projects Error:", error);
+      return res.status(500).json({ success: false, message: "Internal server error." });
+   }
+};
+
+const viewProject = async (req, res) => {
+   try {
+      const projectId = req.params.id;
+
+      // Validate MongoDB ObjectId format
+      if (!projectId.match(/^[0-9a-fA-F]{24}$/)) {
+         return res.status(400).json({ success: false, message: 'Invalid project ID' });
+      }
+
+      // Find project and populate creator's name and bio
+      const project = await projectModel.findById(projectId).populate('creator', 'fullName bio imageUrl twitter linkedin');
+
+      if (!project) {
+         return res.status(404).json({ success: false, message: 'Project not found' });
+      }
+
+      // Compute enhancements
+      const createdAt = new Date(project.createdAt);
+      const endDate = new Date(createdAt);
+      endDate.setDate(createdAt.getDate() + project.duration);
+
+      const now = new Date();
+      const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)));
+
+      const amountRaised = project.currentFunding || 0;
+      const percentageFunded = project.goal
+         ? Math.min((amountRaised / project.goal) * 100, 100).toFixed(0)
+         : "0";
+
+      const enhancedProject = {
+         ...project.toObject(),
+         daysLeft,
+         amountRaised,
+         percentageFunded
+      };
+
+      return res.status(200).json({
+         success: true,
+         message: "Project fetched successfully",
+         project: enhancedProject
+      });
+
+   } catch (error) {
+      console.error('Error fetching project:', error);
+      res.status(500).json({ success: false, message: 'Server error while fetching project' });
+   }
+};
+
+
+// ** Export all controllers **
 export {
-   addProject, myProjects,
-   creatorDashboard
+   addProject, myProjects, getAllProjects,
+   creatorDashboard, viewProject,
 };

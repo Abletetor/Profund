@@ -76,7 +76,7 @@ const loginUser = async (req, res) => {
       // Find user
       const user = await userModel.findOne({ email });
       if (!user) {
-         return res.status(404).json({ success: false, message: "User not found" });
+         return res.status(404).json({ success: false, message: "User not found. Please register to login." });
       }
 
       // Check for password Match
@@ -132,8 +132,8 @@ const updateProfile = async (req, res) => {
       // Check for validation errors using validator package 
       const errors = [];
 
-      if (!req.body.name || req.body.name.trim().length === 0) {
-         errors.push('Name is required');
+      if (!req.body.fullName || req.body.fullName.trim().length === 0) {
+         errors.push('fullName is required');
       }
       if (!req.body.email || !/\S+@\S+\.\S+/.test(req.body.email)) {
          errors.push('A valid email is required');
@@ -143,7 +143,7 @@ const updateProfile = async (req, res) => {
       }
 
       // Destructure the request body
-      const { name, email, location, bio, twitter, linkedin } = req.body;
+      const { fullName, email, location, bio, twitter, linkedin } = req.body;
       const userId = req.user._id;
       // Find the user based on the user ID
       const user = await userModel.findById(userId);
@@ -153,7 +153,7 @@ const updateProfile = async (req, res) => {
       }
 
       // Update the user's profile details
-      if (name) user.fullName = name;
+      if (fullName) user.fullName = fullName;
       if (email) user.email = email;
       if (location) user.location = location;
       if (bio) user.bio = bio;
@@ -171,7 +171,10 @@ const updateProfile = async (req, res) => {
       return res.status(200).json({
          success: true,
          message: 'Profile updated successfully',
-         user: { ...user.toObject(), imageUrl: user.imageUrl },
+         user: {
+            ...user.toObject(),
+            imageUrl: user.imageUrl
+         },
       });
    } catch (error) {
       console.error("Error in UpdateProfile: ", error);
@@ -179,7 +182,7 @@ const updateProfile = async (req, res) => {
    }
 };
 
-
+// ** Export all controllers **
 export {
    registerUser,
    loginUser,
