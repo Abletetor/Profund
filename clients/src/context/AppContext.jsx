@@ -1,5 +1,5 @@
-import { createContext, useEffect, useState } from "react";
-import { projects } from "../assets/assets";
+import { createContext, useCallback, useEffect, useState } from "react";
+// import { projects } from "../assets/assets";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -13,6 +13,7 @@ const AppContextProvider = (props) => {
    const [userData, setUserData] = useState(false);
    const [dashProject, setDashProject] = useState([]);
    const [dashStats, setDashStats] = useState(null);
+   const [projects, setProjects] = useState([]);
 
    // **Get Dashbord Stats for Creator**
    const getCreatorDashboardStats = async () => {
@@ -67,18 +68,40 @@ const AppContextProvider = (props) => {
       }
    };
 
+   // **Get All Projects**
+   const getAllProjects = useCallback(async () => {
+      try {
+         const { data } = await axios.get(`${backendUrl}/api/user/projects`);
+         if (data.success) {
+            setProjects(data.projects);
+         } else {
+            toast.error(data.message);
+         }
+      } catch (error) {
+         toast.error(error.response?.data?.message || "Something went wrong");
+         console.error(error);
+      }
+   }, [backendUrl]);
+
+
+   useEffect(() => {
+      getAllProjects();
+   }, [getAllProjects]);
+
    useEffect(() => {
       if (token) {
          getUserProfile();
       }
    }, [token]);
 
+
    const value = {
-      projects, currency, backendUrl,
+      currency, backendUrl,
       token, setToken,
       userData, setUserData, getUserProfile,
       dashProject, setDashProject, getDashProject,
       getCreatorDashboardStats, dashStats, setDashStats,
+      getAllProjects, setProjects, projects,
    };
 
 

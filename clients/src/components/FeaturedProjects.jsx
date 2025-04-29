@@ -2,15 +2,8 @@ import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
+import { fadeInUp, formatCurrencyAmount } from '../helper/helper';
 
-const fadeInUp = {
-   hidden: { opacity: 0, y: 40 },
-   visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.2 },
-   }),
-};
 
 const FeaturedProjects = () => {
    const { projects, currency } = useContext(AppContext);
@@ -24,7 +17,7 @@ const FeaturedProjects = () => {
          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             { projects.slice(0, 6).map((project, i) => (
                <motion.div
-                  key={ project.id }
+                  key={ project._id }
                   variants={ fadeInUp }
                   initial="hidden"
                   whileInView="visible"
@@ -32,7 +25,7 @@ const FeaturedProjects = () => {
                   custom={ i }
                   className="bg-[#F8FAFC] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
                >
-                  <img src={ project.image } alt={ project.title } className="w-full h-38 object-cover" />
+                  <img src={ project.thumbnail } alt={ project.title } className="w-full h-38 object-cover" />
 
                   <div className="p-5">
                      <div className="flex justify-between items-center mb-2">
@@ -41,27 +34,41 @@ const FeaturedProjects = () => {
                            { project.category }
                         </span>
                      </div>
-                     <p className="text-sm text-gray-500 mb-2">By { project.creator }</p>
+                     <p className="text-sm text-gray-500 mb-2">By { project.creator.fullName }</p>
 
                      {/* Progress Bar */ }
                      <div className="w-full bg-gray-200 h-3 rounded-full mb-2">
                         <div
                            className="h-3 rounded-full bg-[#FACC15]"
-                           style={ { width: `${project.funded}%` } }
+                           style={ { width: `${project.percentageFunded}%` } }
                         />
                      </div>
-                     <div className="text-sm text-gray-600 mb-2 flex justify-between">
-                        <span>{ project.funded }% funded</span>
-                        <span>{ project.daysLeft } days left</span>
-                     </div>
+                     <div className='flex justify-between'>
 
-                     {/* Funding Details */ }
-                     <div className="text-xs text-gray-500 mb-4">
-                        Raised: { currency } { project.raised.toLocaleString() } of { currency } { project.goal.toLocaleString() }
+                        <div className="text-sm text-gray-600 mb-3">
+                           { project.percentageFunded }% funded ({ currency } { project.amountRaised } )
+                        </div>
+                        <span className="text-sm text-gray-500 mb-1">
+                           { project.daysLeft } days left
+                        </span>
+                     </div>
+                     <div className='flex justify-between mb-1'>
+                        <div>
+                           <span className="text-xs text-blue-600">Goal: </span>
+                           <span className="text-xs text-gray-600">
+                              { project.goal ? formatCurrencyAmount(project.goal, currency) : 'No goal set' }
+                           </span>
+                        </div>
+                        <div className=''>
+                           <span className="text-xs text-blue-600">Min Invest: </span>
+                           <span className="text-xs text-gray-600">
+                              { project.minInvestment ? formatCurrencyAmount(project.minInvestment, currency) : 'No min investment' }
+                           </span>
+                        </div>
                      </div>
 
                      <Link
-                        to={ `/projects/${project.id}` }
+                        to={ `/projects/${project._id}` }
                         onClick={ () => scrollTo(0, 0) }
                         className="inline-block text-sm font-medium text-white bg-[#0F172A] px-4 py-2 rounded hover:bg-[#1e293b] transition"
                      >

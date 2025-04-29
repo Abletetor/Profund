@@ -6,9 +6,9 @@ import { AppContext } from '../../context/AppContext';
 import { toast } from 'react-toastify';
 
 const CreatorProfile = () => {
-   const { backendUrl, token, userData } = useContext(AppContext);
+   const { backendUrl, token, userData, getUserProfile } = useContext(AppContext);
    const [profile, setProfile] = useState({
-      name: '',
+      fullName: '',
       email: '',
       location: '',
       bio: '',
@@ -18,7 +18,9 @@ const CreatorProfile = () => {
    });
 
    const [image, setImage] = useState(null);
+   const [imageFile, setImageFile] = useState(null);
    const [isEditing, setIsEditing] = useState(false);
+   const [isLoading, setIsLoading] = useState(false);
 
    useEffect(() => {
       setProfile(userData);
@@ -33,6 +35,7 @@ const CreatorProfile = () => {
       const file = e.target.files[0];
       if (file) {
          setImage(URL.createObjectURL(file));
+         setImageFile(file);
       }
    };
 
@@ -41,16 +44,17 @@ const CreatorProfile = () => {
    };
 
    const handleSaveProfile = async () => {
+      setIsLoading(true);
       try {
          const formData = new FormData();
-         formData.append('name', profile.fullName);
+         formData.append('fullName', profile.fullName);
          formData.append('email', profile.email);
          formData.append('location', profile.location);
          formData.append('bio', profile.bio);
          formData.append('twitter', profile.twitter);
          formData.append('linkedin', profile.linkedin);
          if (image) {
-            formData.append('image', image);
+            formData.append('profileImage', imageFile);
          }
 
          // Send a request to update the profile
@@ -59,18 +63,18 @@ const CreatorProfile = () => {
          });
 
          if (data.success) {
-            setProfile(prev => ({
-               ...prev,
-               imageUrl: data.imageUrl || prev.imageUrl,
-            }));
+            await getUserProfile();
             toast.success(data.message);
             setIsEditing(false);
+            setImage(null);
          } else {
             toast.error(data.message);
          }
       } catch (error) {
          toast.error(error.response?.data?.message || "Something went wrong");
          console.error(error);
+      } finally {
+         setIsLoading(false);
       }
    };
 
@@ -90,7 +94,7 @@ const CreatorProfile = () => {
                   <FaUser className="text-gray-400 mr-2" />
                   <input
                      type="text"
-                     name="name"
+                     name="fullName"
                      value={ profile.fullName }
                      onChange={ handleChange }
                      disabled={ !isEditing }
@@ -196,10 +200,13 @@ const CreatorProfile = () => {
 
          <button
             onClick={ isEditing ? handleSaveProfile : toggleEditMode }
-            className="mt-6 flex items-center gap-2 bg-[#FACC15] hover:bg-yellow-400 transition text-[#0F172A] font-medium py-2 px-5 rounded cursor-pointer"
+            className={ `mt-6 flex items-center gap-2  transition text-[#0F172A] font-medium py-2 px-5 rounded cursor-pointer ${isLoading ? 'opacity-50 cursor-not-allowed' : 'bg-[#FACC15] hover:bg-yellow-400'}` }
          >
-            { isEditing ? <FaSave /> : <FaEdit /> }
-            { isEditing ? 'Save Profile' : 'Edit Profile' }
+            { isLoading
+               ? <span className="animate-spin border-2 border-t-transparent border-[#0F172A] rounded-full w-4 h-4" />
+               : isEditing ? <FaSave /> : <FaEdit />
+            }
+            { isLoading ? 'Saving...' : isEditing ? 'Save Profile' : 'Edit Profile' }
          </button>
       </motion.section>
    );

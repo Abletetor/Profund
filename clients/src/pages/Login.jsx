@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const Login = () => {
    const [showPassword, setShowPassword] = useState(false);
-   const [role, setRole] = useState('investor');
+   const [role, setRole] = useState('creator');
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const { setToken, setUserData, backendUrl } = useContext(AppContext);
@@ -43,8 +43,7 @@ const Login = () => {
             toast.error(data.message);
          }
       } catch (error) {
-         console.error("Error in Login: ", error);
-         // toast.error("Something went wrong. Please try again later.");
+         toast.error(error.response?.data?.message || "Something went wrong");
       }
    };
 
@@ -72,15 +71,6 @@ const Login = () => {
                {/* Role Toggle */ }
                <div className="flex justify-between mb-6">
                   <button
-                     className={ `px-4 py-2 text-sm font-medium rounded-full cursor-pointer ${role === 'investor'
-                        ? 'bg-[#0F172A] text-white'
-                        : 'bg-gray-100 text-gray-700'
-                        }` }
-                     onClick={ () => setRole('investor') }
-                  >
-                     Investor Login
-                  </button>
-                  <button
                      className={ `px-4 py-2 text-sm font-medium rounded-full cursor-pointer ${role === 'creator'
                         ? 'bg-[#0F172A] text-white'
                         : 'bg-gray-100 text-gray-700'
@@ -89,6 +79,16 @@ const Login = () => {
                   >
                      Creator Login
                   </button>
+                  <button
+                     className={ `px-4 py-2 text-sm font-medium rounded-full cursor-pointer ${role === 'investor'
+                        ? 'bg-[#0F172A] text-white'
+                        : 'bg-gray-100 text-gray-700'
+                        }` }
+                     onClick={ () => setRole('investor') }
+                  >
+                     Investor Login
+                  </button>
+
                </div>
 
                {/* Login Form */ }

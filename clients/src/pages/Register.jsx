@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const Register = () => {
    const [showPassword, setShowPassword] = useState(false);
-   const [role, setRole] = useState('investor');
+   const [role, setRole] = useState('creator');
    const [email, setEmail] = useState('');
    const [password, setPassword] = useState('');
    const [confirmPassword, setConfirmPassword] = useState('');
@@ -43,8 +43,7 @@ const Register = () => {
          }
 
       } catch (error) {
-         console.error("Error in Registration: ", error);
-         toast.error("Something went wrong. Please try again later.");
+         toast.error(error.response?.data?.message || "Something went wrong");
       }
    };
 
@@ -75,18 +74,20 @@ const Register = () => {
          <div className="md:w-1/2 p-8 sm:p-12 flex flex-col justify-center">
             <div className="flex justify-between mb-6">
                <button
+                  className={ `px-4 py-2 text-sm font-medium rounded-full cursor-pointer ${role === 'creator'
+                     ? 'bg-[#0F172A] text-white'
+                     : 'bg-gray-100 text-gray-700'
+                     }` }
+                  onClick={ () => setRole('creator') }
+               >
+                  Creator Login
+               </button>
+               <button
                   onClick={ () => setRole('investor') }
                   className={ `px-4 py-2 rounded-full text-sm font-medium cursor-pointer ${role === 'investor' ? 'bg-[#0F172A] text-white' : 'bg-gray-100 text-gray-600'
                      }` }
                >
                   Investor
-               </button>
-               <button
-                  onClick={ () => setRole('creator') }
-                  className={ `px-4 py-2 rounded-full text-sm font-medium cursor-pointer ${role === 'creator' ? 'bg-[#0F172A] text-white' : 'bg-gray-100 text-gray-600'
-                     }` }
-               >
-                  Creator
                </button>
             </div>
 

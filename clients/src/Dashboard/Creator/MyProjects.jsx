@@ -74,26 +74,26 @@ const MyProjects = () => {
                            <div className="text-sm text-gray-600 mb-3">
                               { percentageFunded }% funded ({ formatCurrencyAmount(amountRaised, currency) })
                            </div>
-                           <span className="text-xs text-gray-500 mb-1">
+                           <span className="text-sm text-gray-500 mb-1">
                               { daysLeft } days left
                            </span>
                         </div>
 
-                        <div className='md:flex justify-between mb-2'>
-                           <div className='flex gap-1'>
+                        <div className='flex justify-between'>
+                           <div>
                               <span className="text-xs text-blue-600">Goal: </span>
                               <span className="text-xs text-gray-600">
                                  { project.goal ? formatCurrencyAmount(project.goal, currency) : 'No goal set' }
                               </span>
                            </div>
-
-                           <div className='flex gap-1'>
+                           <div className=''>
                               <span className="text-xs text-blue-600">Min Invest: </span>
                               <span className="text-xs text-gray-600">
                                  { project.minInvestment ? formatCurrencyAmount(project.minInvestment, currency) : 'No min investment' }
                               </span>
                            </div>
                         </div>
+
                         <div className="flex justify-between text-sm text-[#0F172A]">
                            <Link
                               to={ `/projects/${project._id}` }

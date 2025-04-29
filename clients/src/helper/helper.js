@@ -21,6 +21,24 @@ export const cardVariants = {
    }),
 };
 
+export const fadeOut = {
+   hidden: { opacity: 0, y: 40 },
+   visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1 },
+   }),
+};
+
+export const fadeInUp = {
+   hidden: { opacity: 0, y: 40 },
+   visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.2 },
+   }),
+};
+
 // calculate days left
 export const calculateDaysLeft = (createdAt, duration) => {
    const createdDate = new Date(createdAt);
