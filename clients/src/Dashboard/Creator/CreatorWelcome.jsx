@@ -19,7 +19,7 @@ const CreatorWelcome = () => {
          <div className="flex items-center mb-4">
             <FaRegSmileBeam className="text-yellow-400 text-3xl mr-3" />
             <h2 className="text-2xl font-bold text-[#0F172A]">
-               Welcome { <span className="text-[#FACC15]">{ userData.fullName }</span> || 'Creator' }
+               Welcome { <span className="text-[#FACC15]">{ userData?.fullName }</span> || 'Creator' }
             </h2>
          </div>
 
