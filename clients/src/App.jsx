@@ -21,6 +21,15 @@ import MyProjects from './Dashboard/Creator/MyProjects';
 import AddProject from './Dashboard/Creator/AddProject';
 import CreatorProfile from './Dashboard/Creator/CreatorProfile';
 
+// Investor Dashboard
+import InvestorDashboard from './Dashboard/Investor/InvestorDashboard';
+import InvestorQuickStat from './Dashboard/Investor/InvestorQuickStat';
+import MyInvestment from './Dashboard/Investor/MyInvestment';
+import DiscoverProjects from './Dashboard/Investor/DiscoverProjects';
+import InvestmentHistory from './Dashboard/Investor/InvestmentHistory';
+import InvestorWelcome from './Dashboard/Investor/InvestorWelcome';
+import InvestorProfile from './Dashboard/Investor/InvestorProfile';
+
 const App = () => {
    return (
       <div>
@@ -49,6 +58,20 @@ const App = () => {
                <Route path='projects' element={ <MyProjects /> } />
                <Route path='add-new' element={ <AddProject /> } />
                <Route path='profile' element={ <CreatorProfile /> } />
+            </Route>
+
+            {/* 🔹 Nested Investor Dashboard Routes */ }
+            <Route path='/investor' element={ <InvestorDashboard /> }>
+               <Route path='dashboard' element={
+                  <>
+                     <InvestorWelcome />
+                     <InvestorQuickStat />
+                  </>
+               } />
+               <Route path='investments' element={ <MyInvestment /> } />
+               <Route path='investment-history' element={ <InvestmentHistory /> } />
+               <Route path='discover' element={ <DiscoverProjects /> } />
+               <Route path='profile' element={ <InvestorProfile /> } />
             </Route>
          </Routes>
          <Footer />

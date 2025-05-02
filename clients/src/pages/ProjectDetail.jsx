@@ -60,14 +60,6 @@ const ProjectDetail = () => {
       );
    }
 
-   // if (!project) {
-   //    return (
-   //       <div className="min-h-[50vh] flex items-center justify-center text-xl text-red-500">
-   //          Project not found.
-   //       </div>
-   //    );
-   // }
-
    return (
       <motion.div
          initial={ { opacity: 0 } }
@@ -141,6 +133,7 @@ const ProjectDetail = () => {
                {/* CTA */ }
                <Link
                   to={ `/invest/${project._id}` }
+                  onClick={ () => scrollTo(0, 0) }
                   className="inline-block mt-4 bg-[#FACC15] text-[#0F172A] font-semibold px-6 py-3 rounded hover:bg-yellow-400 transition"
                >
                   Invest Now

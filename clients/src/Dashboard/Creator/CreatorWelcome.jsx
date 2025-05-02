@@ -6,7 +6,7 @@ import { AppContext } from '../../context/AppContext';
 const CreatorWelcome = () => {
    const { projects, userData } = useContext(AppContext);
 
-   const isNewUser = projects.length === 0;
+   const isNewUser = projects?.length === 0;
 
 
    return (
