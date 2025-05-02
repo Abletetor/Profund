@@ -148,7 +148,8 @@ const getAllProjects = async (req, res) => {
             ...project.toObject(),
             daysLeft,
             amountRaised,
-            percentageFunded
+            percentageFunded,
+            investorCount: project.investors?.length || 0
          };
       });
 

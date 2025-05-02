@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { investmentSchema } from './investmentModel.js';
 
 const projectSchema = new mongoose.Schema({
    title: { type: String, required: true },
@@ -22,7 +23,8 @@ const projectSchema = new mongoose.Schema({
       type: String,
       enum: ['pending', 'approved', 'rejected', 'completed', 'active'],
       default: 'pending'
-   }
+   },
+   investors: [investmentSchema]
 }, { timestamps: true });
 
 const projectModel = mongoose.models.projects || mongoose.model('projects', projectSchema);

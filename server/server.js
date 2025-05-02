@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from "./config/db.js";
 import userRouter from './routes/userRoute.js';
+import investmentRouter from './routes/investmentRoute.js';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 
 // API EndPoints
 app.use('/api/user', userRouter);
+app.use('/api/investments', investmentRouter);
 
 // Server start
 app.listen(port, () => {
