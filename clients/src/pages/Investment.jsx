@@ -17,7 +17,6 @@ const Investment = () => {
 
    const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
-
    // Handle Invest button
    const handleInvest = () => {
       if (!amount || amount < project.minInvestment) {
@@ -60,14 +59,6 @@ const Investment = () => {
             setLoading(false);
          }
       };
-
-      // ✅ Add the debug log here before Paystack is triggered
-      console.log("DEBUG:", {
-         key: publicKey,
-         email: userData?.email,
-         amount,
-         ref: reference,
-      });
 
       // Paystack payment handler
       const paystackHandler = window.PaystackPop.setup({

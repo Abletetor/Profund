@@ -14,6 +14,7 @@ const AppContextProvider = (props) => {
    const [dashProject, setDashProject] = useState([]);
    const [dashStats, setDashStats] = useState(null);
    const [projects, setProjects] = useState([]);
+   const [investorStats, setInvestorStats] = useState(null);
 
    // **Get Dashbord Stats for Creator**
    const getCreatorDashboardStats = async () => {
@@ -29,6 +30,20 @@ const AppContextProvider = (props) => {
             toast.error(data.message);
          }
 
+      } catch (error) {
+         toast.error(error.response?.data?.message || "Something went wrong");
+         console.error(error);
+      }
+   };
+
+   // ** GET Investor Stats
+   const getInvestorDashboardStats = async () => {
+      try {
+         const { data } = await axios.get(`${backendUrl}/api/investments/investor-stats`, {
+            headers: { Authorization: `Bearer ${token}` }
+         });
+
+         data.success ? setInvestorStats(data.investorStat) : toast.error(data.message);
       } catch (error) {
          toast.error(error.response?.data?.message || "Something went wrong");
          console.error(error);
@@ -91,6 +106,8 @@ const AppContextProvider = (props) => {
    useEffect(() => {
       if (token) {
          getUserProfile();
+         getCreatorDashboardStats();
+         getInvestorDashboardStats();
       }
    }, [token]);
 
@@ -101,6 +118,7 @@ const AppContextProvider = (props) => {
       userData, setUserData, getUserProfile,
       dashProject, setDashProject, getDashProject,
       getCreatorDashboardStats, dashStats, setDashStats,
+      getInvestorDashboardStats, investorStats, setInvestorStats,
       getAllProjects, setProjects, projects,
    };
 

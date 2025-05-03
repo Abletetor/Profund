@@ -32,7 +32,6 @@ const ProjectDetail = () => {
             });
             if (data.success) {
                setProject(data.project);
-               console.log(data.project);
             } else {
                toast.error(data.message);
             }
