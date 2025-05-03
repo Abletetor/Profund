@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Paystack secret from env
-const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET;
+const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
 const verifyAndAddInvestment = async (req, res) => {
    const { reference, projectId, investorId } = req.body;
