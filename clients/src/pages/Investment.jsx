@@ -6,6 +6,7 @@ import { FaMoneyBillWave, FaLock, FaUsers, FaRocket, FaArrowLeft } from 'react-i
 import { formatCurrencyAmount } from '../helper/helper';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import ShimmerLoader from '../components/ShimmerLoder';
 
 const Investment = () => {
    const { id } = useParams();
@@ -16,9 +17,6 @@ const Investment = () => {
 
    const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
 
-   if (!project) {
-      return <div className="text-center py-20">Project not found</div>;
-   }
 
    // Handle Invest button
    const handleInvest = () => {
@@ -63,6 +61,14 @@ const Investment = () => {
          }
       };
 
+      // ✅ Add the debug log here before Paystack is triggered
+      console.log("DEBUG:", {
+         key: publicKey,
+         email: userData?.email,
+         amount,
+         ref: reference,
+      });
+
       // Paystack payment handler
       const paystackHandler = window.PaystackPop.setup({
          key: publicKey,
@@ -78,6 +84,20 @@ const Investment = () => {
 
       paystackHandler.openIframe();
    };
+
+
+   if (loading || !project) {
+      return (
+         <div className="grid md:grid-cols-3 gap-6 mt-8">
+            { Array.from({ length: 3 }).map((_, idx) => (
+               <div key={ idx } className="p-5 rounded-lg shadow-md space-y-4 bg-white">
+                  <ShimmerLoader height="h-8" width="w-2/3" />
+                  <ShimmerLoader height="h-6" width="w-1/3" />
+               </div>
+            )) }
+         </div>
+      );
+   }
 
 
    return (
