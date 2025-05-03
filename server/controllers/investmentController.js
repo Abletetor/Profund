@@ -7,7 +7,9 @@ dotenv.config();
 
 // Paystack secret from env
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
+console.log("Paystack Secret Key:", PAYSTACK_SECRET);
 
+// ** Verify and Add Investment
 const verifyAndAddInvestment = async (req, res) => {
    const { reference, projectId, investorId } = req.body;
 
