@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import projectModel from '../models/projectModel.js';
 import userModel from '../models/userModel.js';
 import axios from 'axios';
@@ -7,7 +8,6 @@ dotenv.config();
 
 // Paystack secret from env
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
-console.log("Paystack Secret Key:", PAYSTACK_SECRET);
 
 // ** Verify and Add Investment
 const verifyAndAddInvestment = async (req, res) => {
@@ -67,7 +67,68 @@ const verifyAndAddInvestment = async (req, res) => {
    }
 };
 
+// ** GET Investor Stats
+const getInvestorDashboardStats = async (req, res) => {
+   const investorId = req.user._id;
+
+   try {
+      const investorObjectId = new mongoose.Types.ObjectId(investorId);
+
+      // Fetch projects containing this investor
+      const projects = await projectModel.find({ "investors.investor": investorObjectId });
+
+      let totalInvested = 0;
+      let highestSingleInvestment = 0;
+      let totalInvestmentCount = 0;
+      let mostRecentInvestment = null;
+
+      const projectIds = new Set();
+
+      projects.forEach(project => {
+         project.investors.forEach(investment => {
+            if (investment.investor.equals(investorObjectId)) {
+               totalInvested += investment.amount;
+               totalInvestmentCount += 1;
+
+               if (investment.amount > highestSingleInvestment) {
+                  highestSingleInvestment = investment.amount;
+               }
+
+               if (!mostRecentInvestment || new Date(investment.date) > new Date(mostRecentInvestment.date)) {
+                  mostRecentInvestment = {
+                     title: project.title,
+                     date: investment.date
+                  };
+               }
+
+               projectIds.add(project._id.toString());
+            }
+         });
+      });
+
+      const averageInvestmentPerProject = projectIds.size > 0
+         ? totalInvested / projectIds.size
+         : 0;
+
+      return res.status(200).json({
+         success: true,
+         investorStat: {
+            totalInvested,
+            projectsSupported: projectIds.size,
+            averageInvestmentPerProject,
+            highestSingleInvestment,
+            totalInvestmentCount,
+            mostRecentProject: mostRecentInvestment
+         },
+      });
+
+   } catch (err) {
+      console.error("Investor Stats Error:", err);
+      return res.status(500).json({ success: false, message: "Server error" });
+   }
+};
 
 export {
-   verifyAndAddInvestment
+   verifyAndAddInvestment,
+   getInvestorDashboardStats
 };
