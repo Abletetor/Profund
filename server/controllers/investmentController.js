@@ -3,6 +3,7 @@ import projectModel from '../models/projectModel.js';
 import userModel from '../models/userModel.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
+import investmentModel from '../models/investmentModel.js';
 
 dotenv.config();
 
@@ -128,7 +129,117 @@ const getInvestorDashboardStats = async (req, res) => {
    }
 };
 
+// ** Get My Investments
+const getMyInvestments = async (req, res) => {
+   const investorId = req.user._id;
+
+   try {
+      const investorObjectId = new mongoose.Types.ObjectId(investorId);
+
+      const projects = await projectModel.find({ 'investors.investor': investorObjectId })
+         .select('title thumbnail goal currentFunding duration createdAt investors');
+
+      const now = new Date();
+      const investments = [];
+
+      for (const project of projects) {
+         // Filter all investments made by this user
+         const userInvestments = project.investors.filter(i =>
+            i.investor.toString() === investorId.toString()
+         );
+
+         if (userInvestments.length > 0) {
+            const totalAmount = userInvestments.reduce((sum, i) => sum + i.amount, 0);
+            const latestInvestmentDate = userInvestments.reduce((latest, i) =>
+               !latest || new Date(i.investedAt) > new Date(latest)
+                  ? i.investedAt
+                  : latest
+               , null);
+
+            const percentageFunded = project.goal
+               ? Math.min((project.currentFunding / project.goal) * 100, 100)
+               : 0;
+
+            const projectAgeDays = Math.floor((now - project.createdAt) / (1000 * 60 * 60 * 24));
+            const daysLeft = Math.max(project.duration - projectAgeDays, 0);
+
+            let status = 'In Progress';
+            if (percentageFunded >= 100) {
+               status = 'Funded';
+            } else if (daysLeft === 0) {
+               status = 'Completed';
+            }
+
+            investments.push({
+               _id: project._id,
+               amount: totalAmount,
+               createdAt: latestInvestmentDate,
+               project: {
+                  title: project.title,
+                  thumbnail: project.thumbnail,
+                  goal: project.goal,
+                  amountRaised: project.currentFunding,
+                  percentageFunded: Math.round(percentageFunded),
+               },
+               status,
+            });
+         }
+      }
+
+      res.status(200).json({ success: true, investments });
+
+   } catch (error) {
+      console.error("Error fetching investments:", error);
+      res.status(500).json({ success: false, message: 'Server error fetching investments' });
+   }
+};
+
+
+// **Get Investment History
+const getInvestmentHistory = async (req, res) => {
+   const investorId = req.user._id;
+
+   try {
+      const investorObjectId = new mongoose.Types.ObjectId(investorId);
+
+      // Get only projects where this investor has invested
+      const projects = await projectModel.find({ 'investors.investor': investorObjectId })
+         .select('title investors');
+
+      const history = [];
+
+      for (const project of projects) {
+         for (const inv of project.investors) {
+            if (inv.investor.toString() === investorId.toString()) {
+
+               const method = inv.paymentRef.startsWith('momo_') ? 'Momo'
+                  : inv.paymentRef.startsWith('card_') ? 'Card'
+                     : 'Unknown';
+
+               history.push({
+                  date: inv.investedAt,
+                  amount: inv.amount,
+                  project: project.title,
+                  method,
+               });
+            }
+         }
+      }
+
+      // Sort by most recent first
+      history.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      res.status(200).json({ success: true, history });
+
+   } catch (error) {
+      console.error("Error fetching investment history:", error);
+      res.status(500).json({ success: false, message: 'Server error fetching investment history' });
+   }
+};
+
 export {
    verifyAndAddInvestment,
-   getInvestorDashboardStats
+   getInvestorDashboardStats,
+   getMyInvestments,
+   getInvestmentHistory,
 };

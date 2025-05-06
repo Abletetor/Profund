@@ -78,10 +78,33 @@ const myProjects = async (req, res) => {
          return res.status(404).json({ success: false, message: "No projects found." });
       }
 
+      // Enhance each project with computed values
+      const enhancedProjects = projects.map(project => {
+         const createdAt = new Date(project.createdAt);
+         const duration = project.duration;
+         const endDate = new Date(createdAt);
+         endDate.setDate(createdAt.getDate() + duration);
+
+         const now = new Date();
+         const daysLeft = Math.max(0, Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)));
+
+         const amountRaised = project.currentFunding || 0;
+         const percentageFunded = project.goal
+            ? Math.min((amountRaised / project.goal) * 100, 100).toFixed(0)
+            : "0";
+
+         return {
+            ...project.toObject(),
+            daysLeft,
+            amountRaised,
+            percentageFunded
+         };
+      });
+
       return res.status(200).json({
          success: true,
          message: "Projects fetched successfully",
-         projects
+         projects: enhancedProjects
       });
    } catch (error) {
       console.error("Get My Projects Error:", error);
@@ -94,20 +117,44 @@ const creatorDashboard = async (req, res) => {
    try {
       const userId = req.user._id;
 
-      // Fetch all Projects
       const projects = await projectModel.find({ creator: userId });
 
+      const now = new Date();
+      let totalRaised = 0;
+      let totalInvestorsSet = new Set();
+      let completedCampaigns = 0;
+      let activeCampaigns = 0;
+
+      for (const project of projects) {
+         totalRaised += project.currentFunding || 0;
+
+         project.investors.forEach(inv => {
+            totalInvestorsSet.add(inv.investor.toString());
+         });
+
+         const createdAt = new Date(project.createdAt);
+         const daysPassed = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
+         const isFullyFunded = project.currentFunding >= project.goal;
+         const isTimeOver = daysPassed >= project.duration;
+
+         if (isFullyFunded || isTimeOver) {
+            completedCampaigns++;
+         } else {
+            activeCampaigns++;
+         }
+      }
+
       const totalProjects = projects.length;
-      const totalRaised = projects.reduce((sum, project) => sum + (project.currentFunding || 0), 0);
-      const activeCampaigns = projects.filter(project => {
-         const now = new Date();
-         return project.deadline && new Date(project.deadline) > now;
-      }).length;
+      const totalInvestors = totalInvestorsSet.size;
+      const averageFunding = totalProjects > 0 ? totalRaised / totalProjects : 0;
 
       const dashStats = {
          totalProjects,
          totalRaised,
-         activeCampaigns
+         activeCampaigns,
+         completedCampaigns,
+         totalInvestors,
+         averageFunding,
       };
 
       return res.status(200).json({ success: true, dashStats });
@@ -116,6 +163,8 @@ const creatorDashboard = async (req, res) => {
       return res.status(500).json({ success: false, message: "Internal server error." });
    }
 };
+
+
 
 // **Get All Project for Frontend**
 const getAllProjects = async (req, res) => {
@@ -213,9 +262,68 @@ const viewProject = async (req, res) => {
    }
 };
 
+// ** Get Project By Id
+const getProjectById = async (req, res) => {
+   try {
+      const project = await projectModel.findById(req.params.id);
+      if (!project) {
+         return res.status(404).json({ success: false, message: "Project not found" });
+      }
+      res.json({ success: true, project });
+   } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: "Server error" });
+   }
+};
+
+// **Update Project
+const editProject = async (req, res) => {
+   try {
+      const projectId = req.params.id;
+      const userId = req.user._id;
+
+      let project = await projectModel.findOne({ _id: projectId, creator: userId });
+      if (!project) {
+         return res.status(404).json({ success: false, message: 'Project not found or unauthorized' });
+      }
+
+      const {
+         title, category, pitch, location,
+         overview, problemSolution, goal,
+         duration, minInvestment, impact,
+      } = req.body;
+
+      // Update fields if provided
+      if (title) project.title = title;
+      if (category) project.category = category;
+      if (pitch) project.pitch = pitch;
+      if (location) project.location = location;
+      if (overview) project.overview = overview;
+      if (problemSolution) project.problemSolution = problemSolution;
+      if (goal) project.goal = goal;
+      if (duration) project.duration = duration;
+      if (minInvestment) project.minInvestment = minInvestment;
+      if (impact) project.impact = impact;
+
+      // Thumbnail update
+      if (req.file) {
+         project.thumbnail = req.file.path;
+      }
+
+      await project.save();
+
+      return res.status(200).json({ success: true, message: 'Project updated successfully', project });
+
+   } catch (error) {
+      console.error("Edit Project Error:", error);
+      return res.status(500).json({ success: false, message: 'Server error while updating project' });
+   }
+};
+
 
 // ** Export all controllers **
 export {
    addProject, myProjects, getAllProjects,
-   creatorDashboard, viewProject,
+   creatorDashboard, viewProject, editProject,
+   getProjectById,
 };
