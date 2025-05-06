@@ -1,5 +1,4 @@
 import { createContext, useCallback, useEffect, useState } from "react";
-// import { projects } from "../assets/assets";
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -15,6 +14,8 @@ const AppContextProvider = (props) => {
    const [dashStats, setDashStats] = useState(null);
    const [projects, setProjects] = useState([]);
    const [investorStats, setInvestorStats] = useState(null);
+   const [investorInvestments, setInvestorInvestments] = useState(null);
+   const [investmentHistory, setInvestmentHistory] = useState(null);
 
    // **Get Dashbord Stats for Creator**
    const getCreatorDashboardStats = async () => {
@@ -49,6 +50,22 @@ const AppContextProvider = (props) => {
          console.error(error);
       }
    };
+
+   // **Get Investor Investment
+   const getInvestorInvestments = async () => {
+      try {
+         const { data } = await axios.get(`${backendUrl}/api/investments/my-investment`, {
+            headers: { Authorization: `Bearer ${token}` }
+         });
+
+         data.success ? setInvestorInvestments(data.investments) : toast.error(data.message);
+
+      } catch (error) {
+         toast.error(error.response?.data?.message || "Something went wrong");
+         console.error(error);
+      }
+   };
+
    // **Get Dashboard Project**
    const getDashProject = async () => {
       try {
@@ -57,6 +74,21 @@ const AppContextProvider = (props) => {
          });
 
          data.success ? setDashProject(data.projects) : toast.error(data.message);
+
+      } catch (error) {
+         toast.error(error.response?.data?.message || "Something went wrong");
+         console.error(error);
+      }
+   };
+
+   // **Get Investment History**
+   const getInvestmentHistory = async () => {
+      try {
+         const { data } = await axios.get(`${backendUrl}/api/investments/investment-history`, {
+            headers: { Authorization: `Bearer ${token}` }
+         });
+
+         data.success ? setInvestmentHistory(data.history) : toast.error(data.message);
 
       } catch (error) {
          toast.error(error.response?.data?.message || "Something went wrong");
@@ -120,6 +152,8 @@ const AppContextProvider = (props) => {
       getCreatorDashboardStats, dashStats, setDashStats,
       getInvestorDashboardStats, investorStats, setInvestorStats,
       getAllProjects, setProjects, projects,
+      getInvestorInvestments, investorInvestments, setInvestorInvestments,
+      getInvestmentHistory, investmentHistory, setInvestmentHistory,
    };
 
 

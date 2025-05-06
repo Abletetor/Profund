@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { motion } from 'framer-motion';
 import { FaMoneyBillWave, FaLock, FaUsers, FaRocket, FaArrowLeft } from 'react-icons/fa';
@@ -10,20 +10,32 @@ import ShimmerLoader from '../components/ShimmerLoder';
 
 const Investment = () => {
    const { id } = useParams();
+   const navigate = useNavigate();
    const { projects, currency, backendUrl, token, userData } = useContext(AppContext);
-   const project = projects?.find((p) => p._id === id);
    const [amount, setAmount] = useState('');
    const [loading, setLoading] = useState(false);
+   const [paymentMethod, setPaymentMethod] = useState("card");
 
    const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+   const project = projects?.find((p) => p._id === id);
 
    // Handle Invest button
    const handleInvest = () => {
+      if (!userData || userData.role !== "investor") {
+         toast.warn("You must be an investor to make an investment.");
+         navigate('/login');
+         return;
+      }
+
+      const remainingAmount = project.goal - project.amountRaised;
       if (!amount || amount < project.minInvestment) {
          return toast(`Minimum investment is ${currency}${project.minInvestment}`);
       }
+      if (amount > remainingAmount) {
+         return toast.warn(`You can only invest up to ${currency}${remainingAmount} to complete the funding.`);
+      }
 
-      const reference = `PF-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
+      const reference = `${paymentMethod}_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
 
       const onPaymentSuccess = (response) => {
          setLoading(true);
@@ -67,6 +79,7 @@ const Investment = () => {
          amount: amount * 100,
          currency: 'GHS',
          ref: reference,
+         channels: paymentMethod === 'momo' ? ['mobile_money'] : ['card'],
          callback: onPaymentSuccess,
          onClose: () => {
             toast.warn('Transaction was canceled.');
@@ -93,7 +106,7 @@ const Investment = () => {
 
    return (
       <section className="bg-white min-h-screen py-12 px-4 sm:px-8 lg:px-24">
-         {/* 1. Project Summary Header */ }
+         {/* Project Summary Header */ }
          <motion.div
             initial={ { opacity: 0, y: 30 } }
             animate={ { opacity: 1, y: 0 } }
@@ -143,6 +156,17 @@ const Investment = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                   min={ project.minInvestment }
                />
+               <div className="mb-4">
+                  <label className="block mb-1 font-medium">Payment Method</label>
+                  <select
+                     className="w-full px-4 py-2 border border-gray-300 rounded mb-4 cursor-pointer"
+                     value={ paymentMethod }
+                     onChange={ (e) => setPaymentMethod(e.target.value) }
+                  >
+                     <option value="card">Card</option>
+                     <option value="momo">MoMo</option>
+                  </select>
+               </div>
 
                <button
                   onClick={ handleInvest }

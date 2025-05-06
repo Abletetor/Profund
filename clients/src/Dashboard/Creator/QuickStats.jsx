@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { motion } from 'framer-motion';
-import { FaProjectDiagram, FaMoneyBillWave, FaBolt } from 'react-icons/fa';
+import { FaProjectDiagram, FaMoneyBillWave, FaBolt, FaCheckCircle, FaUsers, FaChartBar } from 'react-icons/fa';
 import { cardVariants, formatCurrencyAmount } from '../../helper/helper';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -51,6 +51,24 @@ const QuickStats = () => {
          value: formatCurrencyAmount(dashStats.totalRaised, currency),
          icon: <FaMoneyBillWave className="text-2xl text-green-600" />,
          color: 'bg-green-50',
+      },
+      {
+         label: 'Completed Campaigns',
+         value: dashStats.completedCampaigns,
+         icon: <FaCheckCircle className="text-2xl text-purple-600" />,
+         color: 'bg-purple-50',
+      },
+      {
+         label: 'Total Investors',
+         value: dashStats.totalInvestors,
+         icon: <FaUsers className="text-2xl text-indigo-600" />,
+         color: 'bg-indigo-50',
+      },
+      {
+         label: 'Avg. Funding/Project',
+         value: formatCurrencyAmount(dashStats.averageFunding, currency),
+         icon: <FaChartBar className="text-2xl text-teal-600" />,
+         color: 'bg-teal-50',
       },
       {
          label: 'Active Campaigns',

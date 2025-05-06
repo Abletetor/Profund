@@ -29,6 +29,7 @@ import DiscoverProjects from './Dashboard/Investor/DiscoverProjects';
 import InvestmentHistory from './Dashboard/Investor/InvestmentHistory';
 import InvestorWelcome from './Dashboard/Investor/InvestorWelcome';
 import InvestorProfile from './Dashboard/Investor/InvestorProfile';
+import EditProject from './Dashboard/Creator/EditProject';
 
 const App = () => {
    return (
@@ -56,6 +57,7 @@ const App = () => {
                   </>
                } />
                <Route path='projects' element={ <MyProjects /> } />
+               <Route path="/creator/edit/:projectId" element={ <EditProject /> } />
                <Route path='add-new' element={ <AddProject /> } />
                <Route path='profile' element={ <CreatorProfile /> } />
             </Route>

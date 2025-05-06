@@ -1,12 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaUpload } from 'react-icons/fa';
 import { AppContext } from '../../context/AppContext';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const AddProject = () => {
+const EditProject = () => {
+   const { projectId } = useParams();
    const { backendUrl, token } = useContext(AppContext);
    const navigate = useNavigate();
 
@@ -18,6 +19,45 @@ const AddProject = () => {
 
    const [loading, setLoading] = useState(false);
 
+   useEffect(() => {
+      const fetchProject = async () => {
+         try {
+            const { data } = await axios.get(`${backendUrl}/api/user/get-project/${projectId}`, {
+               headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (data.success && data.project) {
+               const p = data.project;
+               setFormData({
+                  title: p.title || '',
+                  category: p.category || '',
+                  thumbnail: null,
+                  thumbnailPreview: p.thumbnail || '',
+                  pitch: p.pitch || '',
+                  location: p.location || '',
+                  overview: p.overview || '',
+                  problemSolution: p.problemSolution || '',
+                  goal: p.goal || '',
+                  duration: p.duration || '',
+                  minInvestment: p.minInvestment || '',
+                  impact: p.impact || ''
+               });
+            } else {
+               toast.error("Project not found.");
+            }
+         } catch (err) {
+            toast.error("Failed to load project.");
+            console.error(err);
+         }
+      };
+
+      if (projectId) {
+         fetchProject();
+      }
+   }, [projectId, backendUrl, token]);
+
+
+
    const handleChange = (e) => {
       const { name, value } = e.target;
       setFormData((prev) => ({ ...prev, [name]: value }));
@@ -27,33 +67,34 @@ const AddProject = () => {
       e.preventDefault();
 
       if (!token) {
-         toast.warn("Login to Add Project");
-         window.scrollTo(0, 0);
+         toast.warn("Login to edit project");
          return navigate('/login');
       }
 
-      const projectData = new FormData();
+      const updatedData = new FormData();
       for (const key in formData) {
          if (key === "thumbnailPreview") continue;
-         if (formData[key]) {
-            projectData.append(key, formData[key]);
+         if (key === "thumbnail" && formData.thumbnail) {
+            updatedData.append('thumbnail', formData.thumbnail);
+         } else if (key !== "thumbnail" && formData[key]) {
+            updatedData.append(key, formData[key]);
          }
       }
 
       try {
          setLoading(true);
 
-         const { data } = await axios.post(`${backendUrl}/api/user/add-project`, projectData, {
-            headers: { Authorization: `Bearer ${token}` }
-         });
+         const { data } = await axios.post(
+            `${backendUrl}/api/user/edit-project/${projectId}`,
+            updatedData,
+            {
+               headers: { Authorization: `Bearer ${token}` }
+            }
+         );
 
          if (data.success) {
             toast.success(data.message);
-            setFormData({
-               title: '', category: '', thumbnail: null, thumbnailPreview: '',
-               pitch: '', location: '', overview: '', problemSolution: '',
-               goal: '', duration: '', minInvestment: '', impact: ''
-            });
+            navigate('/creator/dashboard');
          } else {
             toast.error(data.message);
          }
@@ -70,17 +111,18 @@ const AddProject = () => {
       <motion.section
          initial={ { opacity: 0, y: 30 } }
          animate={ { opacity: 1, y: 0 } }
-         className="max-w-5xl mx-auto bg-white shadow-md p-8 rounded-md mt-10 mb-20"
+         className="max-w-5xl bg-white shadow-md p-5 rounded-md mt-10 mb-20"
       >
-         <h2 className="text-2xl font-bold mb-6 text-[#0F172A]">Create a New Project</h2>
+         <h2 className="text-2xl font-bold mb-6 text-[#0F172A]">Edit Project</h2>
 
          <form onSubmit={ handleSubmit } className="space-y-8">
             {/* Basic Info */ }
             <div>
                <h3 className="text-lg font-semibold mb-3">Basic Info</h3>
                <div className="grid md:grid-cols-2 gap-4">
-                  <input type="text" name="title" value={ formData.title } placeholder="Project Title" onChange={ handleChange } className="input" />
-                  <input type="text" name="category" value={ formData.category } placeholder="Category" onChange={ handleChange } className="input" />
+                  <input type="text" name="title" value={ formData.title } onChange={ handleChange } className="input" placeholder="Project Title" />
+                  <input type="text" name="category" value={ formData.category } onChange={ handleChange } className="input" placeholder="Category" />
+
                   <div className="col-span-2">
                      <label className="block mb-1 font-medium">Project Thumbnail</label>
                      <div className="flex items-center space-x-4">
@@ -95,7 +137,7 @@ const AddProject = () => {
                               onChange={ (e) => {
                                  const file = e.target.files[0];
                                  if (file) {
-                                    setFormData((prev) => ({
+                                    setFormData(prev => ({
                                        ...prev,
                                        thumbnail: file,
                                        thumbnailPreview: URL.createObjectURL(file)
@@ -104,7 +146,6 @@ const AddProject = () => {
                               } }
                            />
                         </label>
-
                         { formData.thumbnailPreview && (
                            <img
                               src={ formData.thumbnailPreview }
@@ -115,32 +156,32 @@ const AddProject = () => {
                      </div>
                   </div>
 
-                  <input type="text" name="pitch" value={ formData.pitch } placeholder="Short Message" onChange={ handleChange } className="input" />
-                  <input type="text" name="location" value={ formData.location } placeholder="Location" onChange={ handleChange } className="input" />
+                  <input type="text" name="pitch" value={ formData.pitch } onChange={ handleChange } className="input" placeholder="Short Message" />
+                  <input type="text" name="location" value={ formData.location } onChange={ handleChange } className="input" placeholder="Location" />
                </div>
             </div>
 
             {/* Details */ }
             <div>
                <h3 className="text-lg font-semibold mb-3">Details</h3>
-               <textarea name="overview" value={ formData.overview } placeholder="Project Overview" onChange={ handleChange } className="input h-24" />
-               <textarea name="problemSolution" value={ formData.problemSolution } placeholder="Problem & Proposed Solution" onChange={ handleChange } className="input h-24 mt-4" />
+               <textarea name="overview" value={ formData.overview } onChange={ handleChange } className="input h-24" placeholder="Project Overview" />
+               <textarea name="problemSolution" value={ formData.problemSolution } onChange={ handleChange } className="input h-24 mt-4" placeholder="Problem & Proposed Solution" />
             </div>
 
             {/* Funding */ }
             <div>
                <h3 className="text-lg font-semibold mb-3">Funding</h3>
                <div className="grid md:grid-cols-3 gap-4">
-                  <input type="number" name="goal" value={ formData.goal } placeholder="Funding Goal (₵)" onChange={ handleChange } className="input" />
-                  <input type="number" name="duration" value={ formData.duration } placeholder="Duration (days)" onChange={ handleChange } className="input" />
-                  <input type="number" name="minInvestment" value={ formData.minInvestment } placeholder="Min. Investment (₵)" onChange={ handleChange } className="input" />
+                  <input type="number" name="goal" value={ formData.goal } onChange={ handleChange } className="input" placeholder="Funding Goal (₵)" />
+                  <input type="number" name="duration" value={ formData.duration } onChange={ handleChange } className="input" placeholder="Duration (days)" />
+                  <input type="number" name="minInvestment" value={ formData.minInvestment } onChange={ handleChange } className="input" placeholder="Min. Investment (₵)" />
                </div>
             </div>
 
             {/* Impact */ }
             <div>
                <h3 className="text-lg font-semibold mb-3">Impact Statement</h3>
-               <textarea name="impact" value={ formData.impact } placeholder="Describe expected impact..." onChange={ handleChange } className="input h-24" />
+               <textarea name="impact" value={ formData.impact } onChange={ handleChange } className="input h-24" placeholder="Describe expected impact..." />
             </div>
 
             {/* Submit */ }
@@ -148,10 +189,10 @@ const AddProject = () => {
                <button
                   type="submit"
                   disabled={ loading }
-                  className={ `bg-[#FACC15] text-[#0F172A] font-semibold px-6 py-2 rounded transition cursor-pointer
+                  className={ `bg-[#FACC15] text-[#0F172A] font-semibold px-6 py-2 rounded transition
                   ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-400'}` }
                >
-                  { loading ? "Submitting..." : "Submit Project" }
+                  { loading ? "Updating..." : "Update Project" }
                </button>
             </div>
          </form>
@@ -159,4 +200,4 @@ const AddProject = () => {
    );
 };
 
-export default AddProject;
+export default EditProject;

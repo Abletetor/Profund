@@ -4,6 +4,7 @@ import { AppContext } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 import { fadeOut, formatCurrencyAmount } from '../helper/helper';
 import ShimmerLoader from '../components/ShimmerLoder';
+import { toast } from 'react-toastify';
 
 const Projects = () => {
    const { projects, currency, getAllProjects } = useContext(AppContext);
@@ -69,8 +70,15 @@ const Projects = () => {
                   whileInView="visible"
                   viewport={ { once: true } }
                   custom={ i }
-                  className="bg-[#F8FAFC] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300"
+                  className={ `relative bg-[#F8FAFC] rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300 ${project.percentageFunded >= 100 ? 'opacity-70 pointer-events-none' : ''
+                     }` }
                >
+                  { project.percentageFunded >= 100 && (
+                     <span className="absolute top-2 right-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full shadow">
+                        Goal Met
+                     </span>
+                  ) }
+
                   <img src={ project.thumbnail } alt={ project.title } className="w-full h-38 object-cover" />
 
                   <div className="p-5">
@@ -85,14 +93,15 @@ const Projects = () => {
                      {/* Progress Bar */ }
                      <div className="w-full bg-gray-200 h-3 rounded-full mb-2">
                         <div
-                           className="h-3 rounded-full bg-[#FACC15]"
-                           style={ { width: `${project.percentageFunded}%` } }
+                           className={ `h-3 rounded-full transition-all duration-500 ${project.percentageFunded >= 100 ? 'bg-green-500' : 'bg-[#FACC15]'
+                              }` }
+                           style={ { width: `${Math.min(project.percentageFunded, 100)}%` } }
                         />
                      </div>
                      <div className='flex justify-between'>
 
                         <div className="text-sm text-gray-600 mb-3">
-                           { project.percentageFunded }% funded ( { formatCurrencyAmount(project.amountRaised) } )
+                           { project.percentageFunded }% funded ({ formatCurrencyAmount(project.amountRaised) })
                         </div>
                         <span className="text-sm text-gray-500 mb-1">
                            { project.daysLeft } days left
@@ -114,11 +123,22 @@ const Projects = () => {
                      </div>
 
                      <Link
-                        to={ `/projects/${project._id}` }
-                        onClick={ () => scrollTo(0, 0) }
-                        className="inline-block text-sm font-medium text-white bg-[#0F172A] px-4 py-2 rounded hover:bg-[#1e293b] transition"
+                        to={ project.percentageFunded >= 100 ? '#' : `/projects/${project._id}` }
+                        onClick={ (e) => {
+                           if (project.percentageFunded >= 100) {
+                              e.preventDefault();
+                              toast.info("This project has reached its funding goal.");
+                           } else {
+                              scrollTo(0, 0);
+                           }
+                        } }
+                        className={ `inline-block text-sm font-medium px-4 py-2 rounded transition
+      ${project.percentageFunded >= 100
+                              ? 'bg-gray-400 cursor-not-allowed text-white'
+                              : 'bg-[#0F172A] hover:bg-[#1e293b] text-white'
+                           }` }
                      >
-                        View Project
+                        { project.percentageFunded >= 100 ? 'Funding Complete' : 'View Project' }
                      </Link>
                   </div>
                </motion.div>
