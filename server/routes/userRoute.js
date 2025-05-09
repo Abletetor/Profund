@@ -7,7 +7,7 @@ import upload from '../middlewares/multer.js';
 import authUser from '../middlewares/authUser.js';
 import {
    addProject, creatorDashboard, editProject,
-   getAllProjects, myProjects, viewProject, getProjectById
+   getAllProjects, myProject, viewProject, getProjectById
 } from '../controllers/projectController.js';
 import uploadProfileImage from '../middlewares/profileUpload.js';
 
@@ -20,7 +20,7 @@ userRouter.get('/creator/dashboard', authUser, creatorDashboard);
 userRouter.get('/profile', authUser, getUserProfile);
 userRouter.post('/update-profile', uploadProfileImage.single('profileImage'), authUser, updateProfile);
 
-userRouter.get('/my-projects', authUser, myProjects);
+userRouter.get('/my-project', authUser, myProject);
 userRouter.post('/add-project', authUser, upload.single('thumbnail'), addProject);
 userRouter.get('/projects', getAllProjects);
 userRouter.get('/projects/:id', authUser, viewProject);

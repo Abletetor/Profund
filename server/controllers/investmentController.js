@@ -3,7 +3,6 @@ import projectModel from '../models/projectModel.js';
 import userModel from '../models/userModel.js';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import investmentModel from '../models/investmentModel.js';
 
 dotenv.config();
 
@@ -75,24 +74,29 @@ const getInvestorDashboardStats = async (req, res) => {
    try {
       const investorObjectId = new mongoose.Types.ObjectId(investorId);
 
-      // Fetch projects containing this investor
+      // Fetch projects where this investor has invested
       const projects = await projectModel.find({ "investors.investor": investorObjectId });
 
       let totalInvested = 0;
       let highestSingleInvestment = 0;
       let totalInvestmentCount = 0;
+      let totalExpectedReturn = 0;
       let mostRecentInvestment = null;
 
       const projectIds = new Set();
 
+      // Loop through all projects
       projects.forEach(project => {
+         // Loop through each investment in the project
          project.investors.forEach(investment => {
             if (investment.investor.equals(investorObjectId)) {
-               totalInvested += investment.amount;
+               const amount = investment.amount;
+
+               totalInvested += amount;
                totalInvestmentCount += 1;
 
-               if (investment.amount > highestSingleInvestment) {
-                  highestSingleInvestment = investment.amount;
+               if (amount > highestSingleInvestment) {
+                  highestSingleInvestment = amount;
                }
 
                if (!mostRecentInvestment || new Date(investment.date) > new Date(mostRecentInvestment.date)) {
@@ -102,7 +106,15 @@ const getInvestorDashboardStats = async (req, res) => {
                   };
                }
 
+               // Add project ID to set for unique count
                projectIds.add(project._id.toString());
+
+               // Calculate expected return if project has returnRate and repaymentPeriod
+               if (project.returnRate && project.repaymentPeriod) {
+                  const returnRateDecimal = (project.returnRate || 0) / 100;
+                  const interest = amount * returnRateDecimal * (project.repaymentPeriod / 12);
+                  totalExpectedReturn += amount + interest;
+               }
             }
          });
       });
@@ -119,7 +131,8 @@ const getInvestorDashboardStats = async (req, res) => {
             averageInvestmentPerProject,
             highestSingleInvestment,
             totalInvestmentCount,
-            mostRecentProject: mostRecentInvestment
+            mostRecentProject: mostRecentInvestment,
+            totalExpectedReturn
          },
       });
 
@@ -137,13 +150,13 @@ const getMyInvestments = async (req, res) => {
       const investorObjectId = new mongoose.Types.ObjectId(investorId);
 
       const projects = await projectModel.find({ 'investors.investor': investorObjectId })
-         .select('title thumbnail goal currentFunding duration createdAt investors');
+         .select('title thumbnail goal currentFunding duration createdAt location returnRate investors')
+         .populate('creator', 'fullName');
 
       const now = new Date();
       const investments = [];
 
       for (const project of projects) {
-         // Filter all investments made by this user
          const userInvestments = project.investors.filter(i =>
             i.investor.toString() === investorId.toString()
          );
@@ -170,13 +183,20 @@ const getMyInvestments = async (req, res) => {
                status = 'Completed';
             }
 
+            // expected return calculation 
+            const returnRateDecimal = (project.returnRate || 0) / 100;
+            const expectedReturn = totalAmount * (1 + returnRateDecimal);
+
             investments.push({
                _id: project._id,
                amount: totalAmount,
                createdAt: latestInvestmentDate,
+               expectedReturn: Math.round(expectedReturn),
                project: {
                   title: project.title,
                   thumbnail: project.thumbnail,
+                  location: project.location,
+                  fullName: project.creator?.fullName,
                   goal: project.goal,
                   amountRaised: project.currentFunding,
                   percentageFunded: Math.round(percentageFunded),
@@ -193,6 +213,7 @@ const getMyInvestments = async (req, res) => {
       res.status(500).json({ success: false, message: 'Server error fetching investments' });
    }
 };
+
 
 
 // **Get Investment History

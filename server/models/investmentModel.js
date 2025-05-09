@@ -17,6 +17,19 @@ export const investmentSchema = new mongoose.Schema({
    investedAt: {
       type: Date,
       default: Date.now
+   },
+   expectedReturn: {
+      type: Number,
+   },
+   repaymentDueDate: {
+      type: Date,
+   },
+   isRepaid: {
+      type: Boolean,
+      default: false
+   },
+   repaidAt: {
+      type: Date
    }
 }, { _id: false });
 

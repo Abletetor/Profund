@@ -12,7 +12,7 @@ const projectSchema = new mongoose.Schema({
    goal: { type: Number, required: true },
    duration: { type: Number, required: true },
    minInvestment: { type: Number, required: true },
-   impact: { type: String, required: true },
+   impact: { type: [String], required: true, defult: [] },
    creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
@@ -24,7 +24,10 @@ const projectSchema = new mongoose.Schema({
       enum: ['pending', 'approved', 'rejected', 'completed', 'active'],
       default: 'pending'
    },
-   investors: [investmentSchema]
+   investors: [investmentSchema],
+
+   returnRate: { type: Number, required: true },
+   repaymentPeriod: { type: Number, required: true }
 }, { timestamps: true });
 
 const projectModel = mongoose.models.projects || mongoose.model('projects', projectSchema);

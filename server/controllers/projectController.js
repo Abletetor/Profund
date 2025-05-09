@@ -7,7 +7,8 @@ const addProject = async (req, res) => {
       const requiredFields = [
          "title", "category", "pitch", "location",
          "overview", "problemSolution", "goal",
-         "duration", "minInvestment", "impact"
+         "duration", "minInvestment", "impact",
+         "returnRate", "repaymentPeriod"
       ];
 
       for (const field of requiredFields) {
@@ -25,7 +26,8 @@ const addProject = async (req, res) => {
       const {
          title, category, pitch,
          location, overview, problemSolution,
-         goal, duration, minInvestment, impact
+         goal, duration, minInvestment, impact,
+         returnRate, repaymentPeriod
       } = req.body;
 
       // Cloudinary uploaded URL
@@ -44,7 +46,9 @@ const addProject = async (req, res) => {
          duration: Number(duration),
          minInvestment: Number(minInvestment),
          impact: impact.trim(),
-         creator: req.user._id
+         creator: req.user._id,
+         returnRate: Number(returnRate),
+         repaymentPeriod: Number(repaymentPeriod)
       });
 
       // Save to DB
@@ -63,7 +67,7 @@ const addProject = async (req, res) => {
 };
 
 // ** Get My Projects For Dashboard**
-const myProjects = async (req, res) => {
+const myProject = async (req, res) => {
    try {
       // Get user ID from request
       const userId = req.user._id;
@@ -73,10 +77,6 @@ const myProjects = async (req, res) => {
          .find({ creator: userId })
          .sort({ createdAt: -1 })
          .populate("creator", "fullName");
-
-      if (!projects || projects.length === 0) {
-         return res.status(404).json({ success: false, message: "No projects found." });
-      }
 
       // Enhance each project with computed values
       const enhancedProjects = projects.map(project => {
@@ -247,7 +247,8 @@ const viewProject = async (req, res) => {
          ...project.toObject(),
          daysLeft,
          amountRaised,
-         percentageFunded
+         percentageFunded,
+         investorCount: project.investors?.length || 0
       };
 
       return res.status(200).json({
@@ -291,6 +292,7 @@ const editProject = async (req, res) => {
          title, category, pitch, location,
          overview, problemSolution, goal,
          duration, minInvestment, impact,
+         returnRate, repaymentPeriod
       } = req.body;
 
       // Update fields if provided
@@ -304,6 +306,8 @@ const editProject = async (req, res) => {
       if (duration) project.duration = duration;
       if (minInvestment) project.minInvestment = minInvestment;
       if (impact) project.impact = impact;
+      if (returnRate) project.returnRate = returnRate;
+      if (repaymentPeriod) project.repaymentPeriod = repaymentPeriod;
 
       // Thumbnail update
       if (req.file) {
@@ -323,7 +327,7 @@ const editProject = async (req, res) => {
 
 // ** Export all controllers **
 export {
-   addProject, myProjects, getAllProjects,
+   addProject, myProject, getAllProjects,
    creatorDashboard, viewProject, editProject,
    getProjectById,
 };
