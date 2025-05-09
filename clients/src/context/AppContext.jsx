@@ -69,7 +69,7 @@ const AppContextProvider = (props) => {
    // **Get Dashboard Project**
    const getDashProject = async () => {
       try {
-         const { data } = await axios.get(`${backendUrl}/api/user/my-projects`, {
+         const { data } = await axios.get(`${backendUrl}/api/user/my-project`, {
             headers: { Authorization: `Bearer ${token}` }
          });
 

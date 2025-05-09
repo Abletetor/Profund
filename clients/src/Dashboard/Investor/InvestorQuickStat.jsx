@@ -47,6 +47,12 @@ const InvestorQuickStat = () => {
          color: 'bg-green-50',
       },
       {
+         label: 'Total Expected Return',
+         value: formatCurrencyAmount(investorStats.totalExpectedReturn || 0, currency),
+         icon: <FaChartLine className="text-2xl text-emerald-600" />,
+         color: 'bg-emerald-50',
+      },
+      {
          label: 'Projects Supported',
          value: investorStats.projectsSupported,
          icon: <FaProjectDiagram className="text-2xl text-purple-600" />,

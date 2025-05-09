@@ -16,6 +16,7 @@ const Register = () => {
    const [fullName, setFullName] = useState('');
    const { token, setToken, setUserData, backendUrl } = useContext(AppContext);
    const navigate = useNavigate();
+   const [loading, setLoading] = useState(false);
 
 
    // Form handler
@@ -32,6 +33,7 @@ const Register = () => {
       }
 
       try {
+         setLoading(true);
          const { data } = await axios.post(`${backendUrl}/api/user/register`, { fullName, email, password, role });
 
          if (data.success) {
@@ -44,6 +46,8 @@ const Register = () => {
 
       } catch (error) {
          toast.error(error.response?.data?.message || "Something went wrong");
+      } finally {
+         setLoading(false);
       }
    };
 
@@ -144,9 +148,10 @@ const Register = () => {
 
                <button
                   type="submit"
-                  className="w-full bg-[#FACC15] hover:bg-yellow-400 text-[#0F172A] font-semibold py-2 rounded"
+                  className={ `w-full bg-[#FACC15] hover:bg-yellow-400 text-[#0F172A] py-2 rounded font-semibold cursor-pointer ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-yellow-400'
+                     }` }
                >
-                  Sign Up
+                  { loading ? 'Signing up...' : 'Sign Up' }
                </button>
 
                <button

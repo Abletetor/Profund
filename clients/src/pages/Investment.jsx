@@ -40,6 +40,7 @@ const Investment = () => {
       const onPaymentSuccess = (response) => {
          setLoading(true);
          verifyInvestment(response.reference);
+         navigate('/investor/dashboard');
       };
 
       const verifyInvestment = async (ref) => {
@@ -216,9 +217,9 @@ const Investment = () => {
                      Your Impact
                   </h2>
                   <ul className="list-disc list-inside text-gray-600 text-sm">
-                     <li>₵100 provides water to 10 people</li>
-                     <li>₵200 supports 2 mobile health kits</li>
-                     <li>₵500 funds a classroom tablet</li>
+                     { project.impact && project.impact.map((point, index) => (
+                        <li key={ index }>{ point }</li>
+                     )) }
                   </ul>
                   <p className="mt-3 text-xs text-gray-500 flex items-center gap-1">
                      <FaUsers className="text-gray-400" /> <strong>{ project.investorCount } investors</strong> so far

@@ -14,7 +14,8 @@ const EditProject = () => {
    const [formData, setFormData] = useState({
       title: '', category: '', thumbnail: null, thumbnailPreview: '',
       pitch: '', location: '', overview: '', problemSolution: '',
-      goal: '', duration: '', minInvestment: '', impact: ''
+      goal: '', duration: '', minInvestment: '', impact: '',
+      returnRate: '', repaymentPeriod: ''
    });
 
    const [loading, setLoading] = useState(false);
@@ -175,6 +176,8 @@ const EditProject = () => {
                   <input type="number" name="goal" value={ formData.goal } onChange={ handleChange } className="input" placeholder="Funding Goal (₵)" />
                   <input type="number" name="duration" value={ formData.duration } onChange={ handleChange } className="input" placeholder="Duration (days)" />
                   <input type="number" name="minInvestment" value={ formData.minInvestment } onChange={ handleChange } className="input" placeholder="Min. Investment (₵)" />
+                  <input type="number" name="returnRate" value={ formData.returnRate } placeholder="Return Rate (%)" onChange={ handleChange } className="input" />
+                  <input type="number" name="repaymentPeriod" value={ formData.repaymentPeriod } placeholder="Repayment Period (months)" onChange={ handleChange } className="input" />
                </div>
             </div>
 
@@ -189,7 +192,7 @@ const EditProject = () => {
                <button
                   type="submit"
                   disabled={ loading }
-                  className={ `bg-[#FACC15] text-[#0F172A] font-semibold px-6 py-2 rounded transition
+                  className={ `bg-[#FACC15] text-[#0F172A] font-semibold px-6 py-2 rounded transition cursor-pointer
                   ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-yellow-400'}` }
                >
                   { loading ? "Updating..." : "Update Project" }

@@ -14,6 +14,7 @@ const Login = () => {
    const [password, setPassword] = useState('');
    const { setToken, setUserData, backendUrl } = useContext(AppContext);
    const navigate = useNavigate();
+   const [loading, setLoading] = useState(false);
 
 
    // Form handler
@@ -25,6 +26,7 @@ const Login = () => {
       }
 
       try {
+         setLoading(true);
          const { data } = await axios.post(`${backendUrl}/api/user/login`, { email, password, role });
 
          if (data.success) {
@@ -44,6 +46,8 @@ const Login = () => {
          }
       } catch (error) {
          toast.error(error.response?.data?.message || "Something went wrong");
+      } finally {
+         setLoading(false);
       }
    };
 
@@ -133,9 +137,10 @@ const Login = () => {
 
                   <button
                      type="submit"
-                     className="w-full bg-[#FACC15] hover:bg-yellow-400 text-[#0F172A] py-2 rounded font-semibold cursor-pointer"
+                     className={ `w-full bg-[#FACC15] hover:bg-yellow-400 text-[#0F172A] py-2 rounded font-semibold cursor-pointer ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-yellow-400'
+                        }` }
                   >
-                     Login
+                     { loading ? 'Signing in...' : 'Login' }
                   </button>
 
                   {/* Optional Social Login */ }

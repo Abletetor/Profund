@@ -3,6 +3,7 @@ import { AppContext } from '../../context/AppContext';
 import { formatCurrencyAmount } from '../../helper/helper';
 import ShimmerLoader from '../../components/ShimmerLoder';
 import { motion } from 'framer-motion';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
 const MyInvestments = () => {
    const { getInvestorInvestments, investorInvestments, currency } = useContext(AppContext);
@@ -58,9 +59,20 @@ const MyInvestments = () => {
                            <h3 className="text-lg font-semibold text-[#0F172A] mb-1">
                               { project?.title || 'Unknown Project' }
                            </h3>
+                           <div className='flex justify-between text-sm text-gray-600 mb-4'>
+                              <p className="text-sm text-gray-500 mb-2">By { project?.fullName }</p>
+                              <p className="text-gray-500 text-xs">
+                                 <FaMapMarkerAlt className="inline-block mr-1 text-blue-500" />
+                                 { project.location }
+                              </p>
+                           </div>
 
                            <p className="text-sm text-gray-600 mb-2">
                               Amount Invested: { formatCurrencyAmount(inv.amount, currency) }
+                           </p>
+
+                           <p className="text-sm text-gray-600 mb-2">
+                              Expected Return: { formatCurrencyAmount(inv.expectedReturn, currency) }
                            </p>
 
                            <p className="text-sm text-gray-500 mb-2">
@@ -85,6 +97,7 @@ const MyInvestments = () => {
                   );
                }) }
             </div>
+
          ) }
       </motion.section>
    );

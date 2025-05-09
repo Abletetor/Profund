@@ -1,13 +1,17 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import { fadeInUp, formatCurrencyAmount } from '../helper/helper';
 import { toast } from 'react-toastify';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
 
 const FeaturedProjects = () => {
-   const { projects, currency } = useContext(AppContext);
+   const { projects, currency, getAllProjects } = useContext(AppContext);
+   useEffect(() => {
+      getAllProjects();
+   }, [getAllProjects]);
    return (
       <section className="bg-white py-20 px-6 md:px-12 lg:px-24">
          <div className="text-center mb-12">
@@ -42,7 +46,14 @@ const FeaturedProjects = () => {
                            { project.category }
                         </span>
                      </div>
-                     <p className="text-sm text-gray-500 mb-2">By { project.creator.fullName }</p>
+                     <div className='flex justify-between text-sm text-gray-600 mb-4'>
+                        <p className="text-sm text-gray-500 mb-2">By { project.creator.fullName }</p>
+                        <p className="text-gray-500 text-xs">
+                           <FaMapMarkerAlt className="inline-block mr-1 text-blue-500" />
+                           { project.location }
+                        </p>
+                     </div>
+
 
                      {/* Progress Bar */ }
                      <div className="w-full bg-gray-200 h-3 rounded-full mb-2">
@@ -75,6 +86,16 @@ const FeaturedProjects = () => {
                            </span>
                         </div>
                      </div>
+                     <div className="flex justify-between text-sm text-gray-600 mb-4">
+                        <div>
+                           <span className="text-xs text-blue-600">Return Rate: </span>
+                           <span>{ project.returnRate ? `${project.returnRate}%` : 'N/A' }</span>
+                        </div>
+                        <div>
+                           <span className="text-xs text-blue-600">Repayment: </span>
+                           <span>{ project.repaymentPeriod ? `${project.repaymentPeriod} Months` : "N/A" }</span>
+                        </div>
+                     </div>
 
                      <Link
                         to={ project.percentageFunded >= 100 ? '#' : `/projects/${project._id}` }
@@ -82,9 +103,8 @@ const FeaturedProjects = () => {
                            if (project.percentageFunded >= 100) {
                               e.preventDefault();
                               toast.info("This project has reached its funding goal.");
-                           } else {
-                              scrollTo(0, 0);
                            }
+                           scrollTo(0, 0);
                         } }
                         className={ `inline-block text-sm font-medium px-4 py-2 rounded transition
       ${project.percentageFunded >= 100

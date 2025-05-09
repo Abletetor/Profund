@@ -78,24 +78,42 @@ const QuickStats = () => {
       },
    ];
 
+   const isZeroData =
+      dashStats.totalProjects === 0 &&
+      dashStats.totalRaised === 0 &&
+      dashStats.completedCampaigns === 0 &&
+      dashStats.totalInvestors === 0 &&
+      dashStats.averageFunding === 0 &&
+      dashStats.activeCampaigns === 0;
+
    return (
-      <div className="grid md:grid-cols-3 gap-6 mt-8">
-         { stats.map((stat, i) => (
-            <motion.div
-               key={ stat.label }
-               variants={ cardVariants }
-               initial="hidden"
-               animate="visible"
-               custom={ i }
-               className={ `p-5 rounded-lg shadow-md flex items-center space-x-4 ${stat.color}` }
-            >
-               <div className="bg-white p-3 rounded-full shadow">{ stat.icon }</div>
-               <div>
-                  <p className="text-gray-600 text-sm">{ stat.label }</p>
-                  <h3 className="text-xl font-bold text-[#0F172A]">{ stat.value }</h3>
-               </div>
-            </motion.div>
-         )) }
+      <div className='mt-8 space-y-4'>
+         { isZeroData && (
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 text-center shadow">
+               <p className="text-sm">
+                  You haven’t add any projects yet — your insights will appear here once you add a project.
+               </p>
+            </div>
+         ) }
+
+         <div className="grid md:grid-cols-3 gap-6 mt-8">
+            { stats.map((stat, i) => (
+               <motion.div
+                  key={ stat.label }
+                  variants={ cardVariants }
+                  initial="hidden"
+                  animate="visible"
+                  custom={ i }
+                  className={ `p-5 rounded-lg shadow-md flex items-center space-x-4 ${stat.color}` }
+               >
+                  <div className="bg-white p-3 rounded-full shadow">{ stat.icon }</div>
+                  <div>
+                     <p className="text-gray-600 text-sm">{ stat.label }</p>
+                     <h3 className="text-xl font-bold text-[#0F172A]">{ stat.value }</h3>
+                  </div>
+               </motion.div>
+            )) }
+         </div>
       </div>
    );
 };

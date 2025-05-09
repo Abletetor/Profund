@@ -13,7 +13,8 @@ const AddProject = () => {
    const [formData, setFormData] = useState({
       title: '', category: '', thumbnail: null, thumbnailPreview: '',
       pitch: '', location: '', overview: '', problemSolution: '',
-      goal: '', duration: '', minInvestment: '', impact: ''
+      goal: '', duration: '', minInvestment: '', impact: '',
+      returnRate: '', repaymentPeriod: ''
    });
 
    const [loading, setLoading] = useState(false);
@@ -50,7 +51,7 @@ const AddProject = () => {
          if (data.success) {
             toast.success(data.message);
             setFormData({
-               title: '', category: '', thumbnail: null, thumbnailPreview: '',
+               title: '', category: '', thumbnail: null, thumbnailPreview: '', returnRate: '', repaymentPeriod: '',
                pitch: '', location: '', overview: '', problemSolution: '',
                goal: '', duration: '', minInvestment: '', impact: ''
             });
@@ -128,13 +129,12 @@ const AddProject = () => {
             </div>
 
             {/* Funding */ }
-            <div>
-               <h3 className="text-lg font-semibold mb-3">Funding</h3>
-               <div className="grid md:grid-cols-3 gap-4">
-                  <input type="number" name="goal" value={ formData.goal } placeholder="Funding Goal (₵)" onChange={ handleChange } className="input" />
-                  <input type="number" name="duration" value={ formData.duration } placeholder="Duration (days)" onChange={ handleChange } className="input" />
-                  <input type="number" name="minInvestment" value={ formData.minInvestment } placeholder="Min. Investment (₵)" onChange={ handleChange } className="input" />
-               </div>
+            <div className="grid md:grid-cols-3 gap-4">
+               <input type="number" name="goal" value={ formData.goal } placeholder="Funding Goal (₵)" onChange={ handleChange } className="input" />
+               <input type="number" name="duration" value={ formData.duration } placeholder="Duration (days)" onChange={ handleChange } className="input" />
+               <input type="number" name="minInvestment" value={ formData.minInvestment } placeholder="Min. Investment (₵)" onChange={ handleChange } className="input" />
+               <input type="number" name="returnRate" value={ formData.returnRate } placeholder="Return Rate (%)" onChange={ handleChange } className="input" />
+               <input type="number" name="repaymentPeriod" value={ formData.repaymentPeriod } placeholder="Repayment Period (months)" onChange={ handleChange } className="input" />
             </div>
 
             {/* Impact */ }
