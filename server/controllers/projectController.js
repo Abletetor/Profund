@@ -164,8 +164,6 @@ const creatorDashboard = async (req, res) => {
    }
 };
 
-
-
 // **Get All Project for Frontend**
 const getAllProjects = async (req, res) => {
    try {
@@ -325,9 +323,76 @@ const editProject = async (req, res) => {
 };
 
 
+// ** Search Projects
+const searchProjects = async (req, res) => {
+   try {
+      const { query = '', page = 1, limit = 10 } = req.query;
+
+      const regex = new RegExp(query, 'i');
+      const filter = {
+         $or: [
+            { title: regex },
+            { category: regex },
+            { location: regex }
+         ]
+      };
+
+      const projects = await projectModel.find(filter)
+         .skip((page - 1) * limit)
+         .limit(parseInt(limit))
+         .select('title category location thumbnail goal currentFunding minInvestment')
+         .populate("creator", "fullName");
+
+      const total = await projectModel.countDocuments(filter);
+
+      res.status(200).json({
+         success: true,
+         data: projects,
+         pagination: {
+            total,
+            page: parseInt(page),
+            pages: Math.ceil(total / limit),
+         }
+      });
+   } catch (error) {
+      console.error('Search error:', error);
+      res.status(500).json({ success: false, message: 'Server error during search' });
+   }
+};
+
+// ** Get Suggestion of Projects
+const getSuggestions = async (req, res) => {
+   try {
+      const { query } = req.query;
+      if (!query) return res.json({ success: false, suggestions: [] });
+
+      const regex = new RegExp(query, 'i');
+
+      const suggestions = await projectModel.find({
+         $or: [
+            { title: regex },
+            { category: regex },
+            { location: regex }
+         ]
+      })
+         .limit(5)
+         .select('title')
+         .lean();
+
+      res.status(200).json({
+         success: true,
+         suggestions: suggestions.map(item => item.title) || []
+      });
+
+   } catch (error) {
+      console.error('Suggestion error:', error);
+      res.status(500).json({ success: false, suggestions: [] });
+   }
+};
+
 // ** Export all controllers **
 export {
    addProject, myProject, getAllProjects,
    creatorDashboard, viewProject, editProject,
-   getProjectById,
+   getProjectById, searchProjects, getSuggestions
 };
