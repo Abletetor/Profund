@@ -194,7 +194,7 @@ const ProjectDetail = () => {
                               <FaTimes className="text-xl" />
                            </button>
 
-                           <InterestCalculator returnRate={ project.returnRate } />
+                           <InterestCalculator returnRate={ project.returnRate } minInvestment={ project.minInvestment } />
                         </div>
                      </div>
                   ) }

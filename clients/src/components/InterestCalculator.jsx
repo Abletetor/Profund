@@ -2,9 +2,9 @@ import { useContext, useState } from 'react';
 import { FaCalculator } from 'react-icons/fa';
 import { AppContext } from '../context/AppContext';
 
-const InterestCalculator = ({ returnRate = 0 }) => {
+const InterestCalculator = ({ returnRate = 0, minInvestment = 0 }) => {
    const { currency } = useContext(AppContext);
-   const [amount, setAmount] = useState(100);
+   const [amount, setAmount] = useState(minInvestment);
 
    const handleInputChange = (e) => {
       const value = parseFloat(e.target.value);
