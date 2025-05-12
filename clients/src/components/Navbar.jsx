@@ -1,15 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { FaBars, FaTimes, FaUserCircle, FaSearch } from 'react-icons/fa';
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 import { assets } from '../assets/assets';
 import { AppContext } from '../context/AppContext';
+import SearchBar from './SearchBar';
 
 const Navbar = () => {
    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-   const [searchQuery, setSearchQuery] = useState('');
    const { token, setToken, setUserData, userData } = useContext(AppContext);
    const navigate = useNavigate();
 
@@ -17,14 +17,17 @@ const Navbar = () => {
    const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
    const toggleMobileSearch = () => setIsMobileSearchOpen(!isMobileSearchOpen);
 
-   const handleSearch = (e) => {
-      e.preventDefault();
-      if (searchQuery.trim()) {
-         navigate(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
-         setSearchQuery('');
-         setIsMobileSearchOpen(false);
-      }
-   };
+   //Handle search bar close on mobile
+   useEffect(() => {
+      const handleResize = () => {
+         if (window.innerWidth >= 768) {
+            setIsMobileSearchOpen(false);
+         }
+      };
+
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+   }, []);
 
    const logout = () => {
       localStorage.removeItem("token");
@@ -48,7 +51,7 @@ const Navbar = () => {
          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             {/* Logo */ }
             <Link to="/" onClick={ () => scrollTo(0, 0) } className="text-[#FACC15] text-2xl font-bold">
-               <img src={ assets.logo } alt="logo" className='w-30 sm:w-24' />
+               <img src={ assets.logo } alt="logo" className="w-30 sm:w-24" />
             </Link>
 
             {/* Desktop Nav + Search */ }
@@ -59,7 +62,7 @@ const Navbar = () => {
                      to={ link.path }
                      onClick={ () => scrollTo(0, 0) }
                      className={ ({ isActive }) =>
-                        `text-white hover:text-[#FACC15] transition duration-200 font-medium ${isActive ? 'border-b-3 border-[#FACC15] text-yellow-400' : ''
+                        `text-white hover:text-[#FACC15] transition duration-200 font-medium ${isActive ? 'border-b-2 border-[#FACC15] text-yellow-400' : ''
                         }`
                      }
                   >
@@ -67,19 +70,8 @@ const Navbar = () => {
                   </NavLink>
                )) }
 
-               {/* Search bar */ }
-               <form onSubmit={ handleSearch } className="relative">
-                  <input
-                     type="text"
-                     value={ searchQuery }
-                     onChange={ (e) => setSearchQuery(e.target.value) }
-                     placeholder="Search..."
-                     className="bg-white text-sm rounded-full px-4 py-1.5 w-56 focus:outline-none"
-                  />
-                  <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600">
-                     <FaSearch />
-                  </button>
-               </form>
+               {/* Desktop Search */ }
+               <SearchBar />
 
                {/* Authenticated View */ }
                { token ? (
@@ -92,7 +84,10 @@ const Navbar = () => {
                         <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-2 z-50">
                            <Link
                               to={ `/${userData?.role || 'investor'}/dashboard` }
-                              onClick={ () => { setIsDropdownOpen(false); scrollTo(0, 0); } }
+                              onClick={ () => {
+                                 setIsDropdownOpen(false);
+                                 scrollTo(0, 0);
+                              } }
                               className="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100"
                            >
                               Dashboard
@@ -117,7 +112,7 @@ const Navbar = () => {
                ) }
             </nav>
 
-            {/* Mobile Menu + Search Icons */ }
+            {/* Mobile Menu Icons */ }
             <div className="flex gap-4 md:hidden text-white text-2xl items-center z-50">
                <FaSearch onClick={ toggleMobileSearch } className="cursor-pointer" />
                <button onClick={ toggleMobileMenu } aria-label="Toggle Menu">
@@ -126,22 +121,9 @@ const Navbar = () => {
             </div>
          </div>
 
-         {/* Mobile Search Bar */ }
+         {/* Mobile Search */ }
          { isMobileSearchOpen && (
-            <form onSubmit={ handleSearch } className="px-4 pb-4 md:hidden">
-               <div className="relative">
-                  <input
-                     type="text"
-                     value={ searchQuery }
-                     onChange={ (e) => setSearchQuery(e.target.value) }
-                     placeholder="Search..."
-                     className="bg-white w-full rounded-full px-4 py-2 text-sm text-gray-700 focus:outline-none"
-                  />
-                  <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600">
-                     <FaSearch />
-                  </button>
-               </div>
-            </form>
+            <SearchBar isMobile={ true } closeMobileSearch={ () => setIsMobileSearchOpen(false) } />
          ) }
 
          {/* Mobile Backdrop */ }
@@ -152,7 +134,7 @@ const Navbar = () => {
             />
          ) }
 
-         {/* Mobile Slide-in Menu */ }
+         {/* Mobile Slide Menu */ }
          { isMobileMenuOpen && (
             <motion.div
                initial={ { x: '100%' } }
@@ -166,9 +148,12 @@ const Navbar = () => {
                      <NavLink
                         key={ link.name }
                         to={ link.path }
-                        onClick={ () => { setIsMobileMenuOpen(false); scrollTo(0, 0); } }
+                        onClick={ () => {
+                           setIsMobileMenuOpen(false);
+                           scrollTo(0, 0);
+                        } }
                         className={ ({ isActive }) =>
-                           `text-white hover:text-[#FACC15] transition duration-200 font-medium ${isActive ? 'border-b-3 border-[#FACC15] text-yellow-400' : ''
+                           `text-white hover:text-[#FACC15] transition duration-200 font-medium ${isActive ? 'border-b-2 border-[#FACC15] text-yellow-400' : ''
                            }`
                         }
                      >
@@ -186,7 +171,10 @@ const Navbar = () => {
                            Dashboard
                         </Link>
                         <button
-                           onClick={ () => { logout(); setIsMobileMenuOpen(false); } }
+                           onClick={ () => {
+                              logout();
+                              setIsMobileMenuOpen(false);
+                           } }
                            className="text-white hover:text-yellow-400 text-left"
                         >
                            Logout
@@ -195,7 +183,10 @@ const Navbar = () => {
                   ) : (
                      <Link
                         to="/login"
-                        onClick={ () => { setIsMobileMenuOpen(false); scrollTo(0, 0); } }
+                        onClick={ () => {
+                           setIsMobileMenuOpen(false);
+                           scrollTo(0, 0);
+                        } }
                         className="block bg-[#FACC15] text-[#0F172A] text-center font-semibold py-2 rounded-md hover:bg-yellow-400 transition"
                      >
                         Sign In

@@ -30,6 +30,7 @@ import InvestmentHistory from './Dashboard/Investor/InvestmentHistory';
 import InvestorWelcome from './Dashboard/Investor/InvestorWelcome';
 import InvestorProfile from './Dashboard/Investor/InvestorProfile';
 import EditProject from './Dashboard/Creator/EditProject';
+import SearchResults from './pages/SearchResults';
 
 const App = () => {
    return (
@@ -47,6 +48,7 @@ const App = () => {
             <Route path='/blog/:id' element={ <BlogDetail /> } />
             <Route path='/login' element={ <Login /> } />
             <Route path='/register' element={ <Register /> } />
+            <Route path="/search" element={ <SearchResults /> } />
 
             {/* 🔹 Nested Creator Dashboard Routes */ }
             <Route path='/creator' element={ <CreatorDashboard /> }>
