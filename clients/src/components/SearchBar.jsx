@@ -48,7 +48,7 @@ const SearchBar = ({ isMobile = false, closeMobileSearch }) => {
    };
 
    return (
-      <div className={ `w-full relative ${isMobile ? 'px-4 pb-4' : ''}` }>
+      <div className={ `w-[300px] relative ${isMobile ? 'px-4 pb-4 w-full' : ''}` }>
          <form onSubmit={ handleSubmit }>
             <div className="flex items-center bg-white rounded-full px-4 py-2 w-full">
                <input
@@ -69,7 +69,7 @@ const SearchBar = ({ isMobile = false, closeMobileSearch }) => {
 
          { suggestions.length > 0 && (
             <ul
-               className="absolute left-0 right-0 top-full mt-1 bg-white shadow-md rounded-md z-50 max-h-60 overflow-y-auto w-full sm:w-auto"
+               className="absolute left-0 top-full mt-1 bg-white shadow-md rounded-md z-50 max-h-60 overflow-y-auto w-full"
                style={ { minWidth: '100%' } }
             >
                { suggestions.map((sugg, idx) => (
