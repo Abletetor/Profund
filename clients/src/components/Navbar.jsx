@@ -48,7 +48,7 @@ const Navbar = () => {
 
    return (
       <header className="sticky top-0 z-50 bg-[#0F172A]">
-         <div className="container px-4 py-4 flex items-center justify-between">
+         <div className="lg:px-20 px-4 py-4 flex items-center justify-between">
             {/* Logo */ }
             <Link to="/" onClick={ () => scrollTo(0, 0) } className="text-[#FACC15] text-2xl font-bold">
                <img src={ assets.logo } alt="logo" className="w-30 sm:w-20" />

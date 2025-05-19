@@ -84,7 +84,7 @@ const DiscoverProjects = () => {
                         </span>
                      </div>
                      <div className='flex justify-between text-sm text-gray-600 mb-4'>
-                        <p className="text-sm text-gray-500 mb-2">By { project.creator.fullName }</p>
+                        <p className="text-xs text-gray-500 mb-2">By { project.creator.fullName }</p>
                         <p className="text-gray-500 text-xs">
                            <FaMapMarkerAlt className="inline-block mr-1 text-blue-500" />
                            { project.location }
@@ -101,10 +101,10 @@ const DiscoverProjects = () => {
                      </div>
                      <div className='flex justify-between'>
 
-                        <div className="text-sm text-gray-600 mb-3">
+                        <div className="text-xs text-gray-600 mb-3">
                            { project.percentageFunded }% funded ({ formatCurrencyAmount(project.amountRaised) })
                         </div>
-                        <span className="text-sm text-gray-500 mb-1">
+                        <span className="text-xs text-gray-500 mb-1">
                            { project.daysLeft } days left
                         </span>
                      </div>
@@ -125,11 +125,11 @@ const DiscoverProjects = () => {
                      <div className="flex justify-between text-sm text-gray-600 mb-4">
                         <div>
                            <span className="text-xs text-blue-600">Return Rate: </span>
-                           <span>{ project.returnRate ? `${project.returnRate}%` : 'N/A' }</span>
+                           <span className='text-xs'>{ project.returnRate ? `${project.returnRate}%` : 'N/A' }</span>
                         </div>
                         <div>
                            <span className="text-xs text-blue-600">Repayment: </span>
-                           <span>{ project.repaymentPeriod ? `${project.repaymentPeriod} Months` : "N/A" }</span>
+                           <span className='text-xs'>{ project.repaymentPeriod ? `${project.repaymentPeriod} Months` : "N/A" }</span>
                         </div>
                      </div>
 
