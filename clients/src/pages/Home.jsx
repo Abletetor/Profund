@@ -5,7 +5,7 @@ import HowItWorks from '../components/HowItWorks';
 import WhyInvest from '../components/WhyInvest';
 import Testimonials from '../components/Testimonials';
 import PlatformStats from '../components/PlatformStats';
-import WhyProfund from '../components/WhyProfund';
+import WhyKLYNTFUND from '../components/WhyKLYNTFUND';
 import FinalCTA from '../components/FinalCTA';
 import FAQ from '../components/FAQ';
 
@@ -18,7 +18,7 @@ const Home = () => {
          <WhyInvest />
          <Testimonials />
          <PlatformStats />
-         <WhyProfund />
+         <WhyKLYNTFUND />
          <FinalCTA />
          <FAQ />
       </div>

@@ -14,7 +14,7 @@ const Header = () => {
             className="max-w-xl text-center md:text-left"
          >
             <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-4">
-               Turn Ideas into Reality with <span className="text-[#FACC15]">Profund</span>
+               Turn Ideas into Reality with <span className="text-[#FACC15]">KLYNTFUND</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8">
                Discover, support, or launch powerful ideas. A better way to fund the future.

@@ -17,7 +17,7 @@ const Testimonials = () => {
       <section className="bg-[#1E293B] text-white py-20 px-6 md:px-12 lg:px-24">
          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold">What People Are Saying</h2>
-            <p className="text-gray-300 mt-2">Real feedback from creators and investors in the Profund community.</p>
+            <p className="text-gray-300 mt-2">Real feedback from creators and investors in the <span className="text-[#FACC15]">KLYNTFUND</span> community.</p>
          </div>
 
          <div className="grid md:grid-cols-3 gap-10">

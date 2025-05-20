@@ -24,11 +24,11 @@ const InvestorWelcome = () => {
 
          { isNewInvestor ? (
             <p className="text-gray-700 leading-relaxed text-[16px] md:text-[17px]">
-               It looks like you're just getting started! Use this dashboard to explore projects, make your first investment, and support ideas that inspire you. We're thrilled to have you on Profund — let's grow impact together!
+               It looks like you're just getting started! Use this dashboard to explore projects, make your first investment, and support ideas that inspire you. We're thrilled to have you on KLYNTFUND — let's grow impact together!
             </p>
          ) : (
             <p className="text-gray-700 leading-relaxed text-[16px] md:text-[17px]">
-               Welcome back! Here you can track your investments, monitor the impact of your contributions, and discover new opportunities to support bold ideas. Thanks for being part of the Profund community!
+               Welcome back! Here you can track your investments, monitor the impact of your contributions, and discover new opportunities to support bold ideas. Thanks for being part of the KLYNTFUND community!
             </p>
          ) }
       </motion.div>

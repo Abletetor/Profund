@@ -18,11 +18,11 @@ const fadeIn = {
    }),
 };
 
-const WhyProfund = () => {
+const WhyKLYNTFUND = () => {
    return (
       <section className="bg-gray-50 py-20 px-6 md:px-12 lg:px-24 text-gray-800">
          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold">Why Choose Profund?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold">Why Choose <span className="text-[#FACC15]">KLYNTFUND</span>?</h2>
             <p className="mt-3 text-gray-600">
                We’re more than just a crowdfunding platform — we’re a launchpad for game-changing ideas.
             </p>
@@ -56,4 +56,4 @@ const WhyProfund = () => {
    );
 };
 
-export default WhyProfund;
+export default WhyKLYNTFUND;

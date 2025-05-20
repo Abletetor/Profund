@@ -6,9 +6,7 @@ import { blogPosts } from '../assets/assets';
 
 const BlogDetail = () => {
    const { id } = useParams();
-   console.log("Blog ID from URL:", id);
    const blog = blogPosts.find((post) => post.id.toString() === id.toString());
-   console.log("Blog post found:", blog);
 
    if (!blog) {
       return (

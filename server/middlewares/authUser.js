@@ -23,7 +23,7 @@ const authUser = async (req, res, next) => {
 
    } catch (error) {
       console.error('Auth Middleware Error:', error);
-      return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+      return res.status(401).json({ message: 'Something went wrong. Login Again' });
    }
 };
 

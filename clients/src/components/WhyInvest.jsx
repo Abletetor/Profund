@@ -33,7 +33,7 @@ const WhyInvest = () => {
    return (
       <section className="bg-white py-20 px-6 md:px-12 lg:px-24">
          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A]">Why Invest with Profund</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A]">Why Invest with <span className="text-[#FACC15]">KLYNTFUND</span></h2>
             <p className="text-gray-600 mt-2 max-w-xl mx-auto">
                Back groundbreaking ideas, empower change, and track your contribution every step of the way.
             </p>

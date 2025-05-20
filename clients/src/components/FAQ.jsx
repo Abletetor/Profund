@@ -4,7 +4,7 @@ import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 const faqs = [
    {
-      question: 'How do I start a project on Profund?',
+      question: 'How do I start a project on KLYNTFUND?',
       answer: 'Simply sign up, go to your dashboard, and click "Create Project". You’ll be guided through uploading images, setting milestones, and submitting for review.',
    },
    {
@@ -12,7 +12,7 @@ const faqs = [
       answer: 'Investors browse projects and fund those they believe in. Once a project is fully funded, funds are released in milestones to ensure accountability.',
    },
    {
-      question: 'Is it safe to invest on Profund?',
+      question: 'Is it safe to invest on KLYNTFUND?',
       answer: 'Yes! All projects are verified by our admin team, and payments are handled through secure, encrypted channels.',
    },
    {

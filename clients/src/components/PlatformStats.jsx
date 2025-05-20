@@ -38,7 +38,7 @@ const PlatformStats = () => {
    return (
       <section className="bg-[#1E293B] py-20 px-6 md:px-12 lg:px-24 text-white">
          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold">Profund Impact</h2>
+            <h2 className="text-3xl md:text-4xl font-bold"><span className="text-[#FACC15]">KLYNTFUND</span> Impact</h2>
             <p className="text-gray-400 mt-2">A growing movement of ideas backed by passionate supporters.</p>
          </div>
 

@@ -16,7 +16,7 @@ const FinalCTA = () => {
                Ready to Make an Impact?
             </h2>
             <p className="text-lg mb-8">
-               Whether you're launching the next big idea or backing one — Profund is the platform for change.
+               Whether you're launching the next big idea or backing one — KLYNTFUND is the platform for change.
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">

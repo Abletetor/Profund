@@ -16,9 +16,9 @@ const About = () => {
                transition={ { duration: 0.6 } }
                className="text-center"
             >
-               <h1 className="text-4xl font-bold text-[#0F172A] mb-4">About Profund</h1>
+               <h1 className="text-4xl font-bold text-[#0F172A] mb-4">About <span className="text-[#FACC15]">KLYNTFUND</span></h1>
                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Profund is a community-powered crowdfunding platform where dreamers meet doers.
+                  KLYNTFUND is a community-powered crowdfunding platform where dreamers meet doers.
                   We connect passionate creators with supportive investors to turn ideas into impactful realities.
                </p>
             </motion.div>
@@ -86,7 +86,7 @@ const About = () => {
                <h3 className="text-2xl font-semibold text-[#0F172A] mb-4">Be part of something big</h3>
                <p className="text-gray-600 max-w-xl mx-auto mb-6">
                   Whether you’re launching a project or looking to invest in the next big thing,
-                  Profund is your platform for impact.
+                  <span className="text-[#FACC15]">KLYNTFUND</span> is your platform for impact.
                </p>
                <div className="flex justify-center gap-4">
                   <Link

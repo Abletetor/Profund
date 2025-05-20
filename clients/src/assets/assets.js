@@ -1,4 +1,4 @@
-import logo from './logo.png';
+import logo from './logo1.png';
 import headerImg from './header-illustration.svg';
 import solarImg from './solar-water.png';
 import mobileImg from './mobile-health.png';
@@ -195,7 +195,7 @@ export const projects = [
 // Team members
 export const teamMembers = [
    {
-      name: 'Issac Gavor',
+      name: 'Issac Loveland',
       role: 'Founder & CEO',
       img: team3,
       socials: {
@@ -261,7 +261,7 @@ export const testimonials = [
    {
       name: 'Kwame Boateng',
       role: 'Creator',
-      quote: '“Profund gave my idea a life of its own. I got fully funded in just two weeks!”',
+      quote: '“KLYNTFUND gave my idea a life of its own. I got fully funded in just two weeks!”',
       avatar: testimony1,
    },
    {
@@ -302,14 +302,14 @@ export const blogPosts = [
    },
    {
       id: 2,
-      title: 'Why Profund Uses Milestone-Based Funding',
+      title: 'Why KLYNTFUND Uses Milestone-Based Funding',
       content: `Milestone-based funding is a safer, smarter approach. It ensures that project owners stay accountable and investors feel confident.
 
       💡 Funds are released in stages, aligned with project goals.
       💡 Admin verification ensures legitimacy.
       💡 Transparency increases trust.
 
-      Profund believes in trust-driven innovation—and milestone funding delivers just that.
+      KLYNTFUND believes in trust-driven innovation—and milestone funding delivers just that.
     `,
       summary: 'Discover the benefits of milestone-based disbursement and how it protects investors and creators.',
       date: 'March 2025',

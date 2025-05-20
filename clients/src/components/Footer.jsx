@@ -12,7 +12,7 @@ const Footer = () => {
             <div>
                <img src={ assets.logo } alt="logo" className='w-38' />
                <p className="text-sm leading-relaxed">
-                  Profund is your gateway to fund, launch, and support world-changing ideas.
+                  KLYNTFUND is your gateway to fund, launch, and support world-changing ideas.
                   Join a growing community of innovators and investors.
                </p>
             </div>
@@ -61,7 +61,7 @@ const Footer = () => {
          </div>
 
          <div className="border-t border-gray-600 mt-10 pt-6 text-sm text-center">
-            &copy; { new Date().getFullYear() } Profund. All rights reserved.
+            &copy; { new Date().getFullYear() } KLYNTFUND. All rights reserved.
          </div>
       </footer>
    );

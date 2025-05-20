@@ -16,7 +16,7 @@ const Blog = () => {
             transition={ { duration: 0.6 } }
             className="max-w-6xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-bold text-[#0F172A] mb-12 text-center">
-               Latest from Profund
+               Latest from <span className="text-[#FACC15]">KLYNTFUND</span>
             </h2>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">

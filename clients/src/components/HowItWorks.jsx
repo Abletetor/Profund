@@ -33,9 +33,9 @@ const HowItWorks = () => {
    return (
       <section className="bg-gray-50 py-20 px-6 md:px-12 lg:px-24">
          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A]">How Profund Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A]">How <span className="text-[#FACC15]">KLYNTFUND</span> Works</h2>
             <p className="text-gray-600 mt-2 max-w-xl mx-auto">
-               Whether you're launching your next big idea or investing in innovation, Profund is simple and impactful.
+               Whether you're launching your next big idea or investing in innovation, KLYNTFUND is simple and impactful.
             </p>
          </div>
 

@@ -62,7 +62,7 @@ const Login = () => {
          {/* Header Section */ }
          <div className="md:w-1/2 bg-[#0F172A] text-white flex items-center justify-center p-10">
             <div>
-               <h1 className="text-3xl md:text-4xl font-bold mb-4">Welcome Back to <span className="text-[#FACC15]">Profund</span></h1>
+               <h1 className="text-3xl md:text-4xl font-bold mb-4">Welcome Back to <span className="text-[#FACC15]">KLYNTFUND</span></h1>
                <p className="text-gray-300 max-w-md">
                   Join Ghana’s top innovators and investors driving real-world impact.
                </p>
